@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
@@ -8,9 +9,11 @@ import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
+
 const options = ['Бизнес', 'Разработка', 'Сервис'];
 
 export default function RegistrationUser() {
+
 
     const {
         register,
@@ -27,6 +30,7 @@ export default function RegistrationUser() {
 
     const [confirmPassword, setConfirmPassword] = useState('')
     const [inputValue, setInputValue] = React.useState('');
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const [user, setUser] = useState({
         username: "",
@@ -38,12 +42,15 @@ export default function RegistrationUser() {
     const { username, password, email, department } = user
 
     const onInputChange = (e) => {
-            setUser({ ...user, [e.target.name]: e.target.value })
+        setUser({ ...user, [e.target.name]: e.target.value })
     }
 
     const onSubmit = async (e) => {
-        alert(JSON.stringify(user))
-        await axios.post(`http://localhost:8080/api/auth/signup`, user)
+        try {
+            await axios.post(`http://localhost:8080/api/auth/signup`, user)
+        } catch (error) {
+            setErrorMessage(error.response.data.message)
+        }
         navigate("/")
     }
 
@@ -51,6 +58,9 @@ export default function RegistrationUser() {
         <div className='container mt-5'>
             <div className='row'>
                 <div className='col-md-10 offset-md-1 border rounded p-4 mt-2 shadow'>
+                    <div>
+                        {errorMessage && <><br /><Alert variant="outlined" severity="error">{errorMessage}</Alert></>}
+                    </div>
                     <h3 className='text-center'>Регистрация</h3>
                     <form onSubmit={handleSubmit(onSubmit)} className="text-start">
                         <div className='mb-3'>
@@ -151,8 +161,8 @@ export default function RegistrationUser() {
                                 <Autocomplete
                                     inputValue={inputValue}
                                     onInputChange={(event, newInputValue) => {
-                                      setInputValue(newInputValue);
-                                      setUser({...user,['department']:newInputValue})
+                                        setInputValue(newInputValue);
+                                        setUser({ ...user, ['department']: newInputValue })
                                     }}
                                     id="controllable-states-demo"
                                     options={options}
