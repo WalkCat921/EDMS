@@ -42,8 +42,12 @@ export default function RegistrationUser() {
     }
 
     const onSubmit = async (e) => {
-        alert(JSON.stringify(user))
-        await axios.post(`http://localhost:8080/api/auth/signup`, user)
+        try{
+            await axios.post("http://localhost:8080/api/auth/signup", user)
+            }catch(error){
+                console.log(error.response)
+                console.log(error.response.status)
+            }
         navigate("/")
     }
 

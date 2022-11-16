@@ -38,8 +38,9 @@ export default function LoginUser() {
         .then(response=>{
             let token = response.data.token;
             localStorage.setItem('jwtToken',token);
+            navigate("/main")
         })
-        navigate("/")
+        
     }
 
     return (
