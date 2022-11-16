@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import InputMask from "react-input-mask";
-
 export default function LoginUser() {
 
     const {
@@ -40,7 +39,6 @@ export default function LoginUser() {
             localStorage.setItem('jwtToken',token);
             navigate("/main")
         })
-        
     }
 
     return (

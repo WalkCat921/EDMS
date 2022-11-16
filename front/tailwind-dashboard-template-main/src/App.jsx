@@ -2,10 +2,18 @@ import React, { useEffect } from 'react';
 import {
   Routes,
   Route,
-  useLocation
+  useLocation,
+  Router
 } from 'react-router-dom';
 
+
+
+// import './css/style.css';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+
+
+
+
 
 import './charts/ChartjsConfig';
 
