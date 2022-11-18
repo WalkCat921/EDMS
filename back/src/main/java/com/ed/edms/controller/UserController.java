@@ -24,24 +24,23 @@ public class UserController {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id){
         return new ResponseEntity<>(userService.getOne(id), HttpStatus.OK);
     }
 
-    // TODO full update info
-    @PutMapping("/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody User user){
         return new ResponseEntity<>(userService.updateOne(id, user), HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id){
         userService.deleteOne(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/person/{id}")
+    @GetMapping("/user/person/{id}")
     public ResponseEntity<?> getUserPersonDetailsById(@PathVariable Long id){
         return new ResponseEntity<>(userService.getUserPersonDetails(id), HttpStatus.OK);
     }
