@@ -22,6 +22,8 @@ import Banner from '../partials/Banner';
 import AllUsers from '../partials/admin/AllUsers';
 
 
+import '../css/style.css'
+
 function Dashboard() {
 
 
