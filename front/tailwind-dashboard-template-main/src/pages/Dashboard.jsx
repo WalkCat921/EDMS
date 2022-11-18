@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
@@ -20,9 +19,35 @@ import DashboardCard11 from '../partials/dashboard/DashboardCard11';
 import DashboardCard12 from '../partials/dashboard/DashboardCard12';
 import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
+import AllUsers from '../partials/admin/AllUsers';
 
 
 function Dashboard() {
+
+
+  const mainDashboardComponents = [<><DashboardCard01 /><DashboardCard02 /></>]
+  const adminPanelUsers = [<><AllUsers/></>]
+
+  const [currentUrl, setCurrentUrl] = useState('');
+  const [components, setComponents]= useState([]);
+
+  useEffect(()=>{
+    // console.log(window.location.href)
+    setCurrentUrl(window.location.href);
+    // console.log(currentUrl)
+    switch (currentUrl) {
+      case 'http://localhost:5173/main':
+            setComponents(mainDashboardComponents);
+        break;
+      case 'http://localhost:5173/main/admin/panel/users':
+        // console.log(components)
+            setComponents(adminPanelUsers);
+        break;
+      default:
+        break;
+    }
+
+  })
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -43,7 +68,6 @@ function Dashboard() {
 
             {/* Welcome banner */}
             <WelcomeBanner />
-
             {/* Dashboard actions */}
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
 
@@ -61,7 +85,7 @@ function Dashboard() {
                     <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                         <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                     </svg>
-                    <span className="hidden xs:block ml-2">Add view</span>
+                    <span className="hidden xs:block ml-2">Создать документ</span>
                 </button>                
               </div>
 
@@ -70,32 +94,33 @@ function Dashboard() {
             {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
 
+              {components}
               {/* Line chart (Acme Plus) */}
-              <DashboardCard01 />
+              {/*  */}
               {/* Line chart (Acme Advanced) */}
-              <DashboardCard02 />
+              {/*  */}
               {/* Line chart (Acme Professional) */}
-              <DashboardCard03 />
+              {/* <DashboardCard03 /> */}
               {/* Bar chart (Direct vs Indirect) */}
-              <DashboardCard04 />
+              {/* <DashboardCard04 /> */}
               {/* Line chart (Real Time Value) */}
-              <DashboardCard05 />
+              {/* <DashboardCard05 /> */}
               {/* Doughnut chart (Top Countries) */}
-              <DashboardCard06 />
+              {/* <DashboardCard06 /> */}
               {/* Table (Top Channels) */}
-              <DashboardCard07 />
+              {/* <DashboardCard07 /> */}
               {/* Line chart (Sales Over Time) */}
-              <DashboardCard08 />
+              {/* <DashboardCard08 /> */}
               {/* Stacked bar chart (Sales VS Refunds) */}
-              <DashboardCard09 />
+              {/* <DashboardCard09 /> */}
               {/* Card (Customers) */}
-              <DashboardCard10 />
+              {/* <DashboardCard10 /> */}
               {/* Card (Reasons for Refunds) */}
-              <DashboardCard11 />
+              {/* <DashboardCard11 /> */}
               {/* Card (Recent Activity) */}
-              <DashboardCard12 />
+              {/* <DashboardCard12 /> */}
               {/* Card (Income/Expenses) */}
-              <DashboardCard13 />
+              {/* <DashboardCard13 /> */}
               
             </div>
 

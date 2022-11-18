@@ -48,10 +48,10 @@ export default function RegistrationUser() {
     const onSubmit = async (e) => {
         try {
             await axios.post(`http://localhost:8080/api/auth/signup`, user)
+            navigate("/")
         } catch (error) {
             setErrorMessage(error.response.data.message)
         }
-        navigate("/")
     }
 
     return (
@@ -155,7 +155,7 @@ export default function RegistrationUser() {
                         </div>
                         <div className='mb-3'>
                             <label htmlFor="Department" className="form-label">
-                                Отдел <label className='text-danger'>*</label>
+                                Должность <label className='text-danger'>*</label>
                             </label>
                             <div>
                                 <Autocomplete
@@ -167,7 +167,7 @@ export default function RegistrationUser() {
                                     id="controllable-states-demo"
                                     options={options}
                                     sx={{ width: 300 }}
-                                    renderInput={(params) => <TextField {...params} label="Controllable" />}
+                                    renderInput={(params) => <TextField {...params}/>}
                                 />
                             </div>
                         </div>

@@ -36,7 +36,7 @@ export default function LoginUser() {
         await axios.post(`http://localhost:8080/api/auth/signin`, user)
         .then(response=>{
             let token = response.data.token;
-            localStorage.setItem('jwtToken',token);
+            localStorage.setItem('jwt',token);
             navigate("/")
         })
         
