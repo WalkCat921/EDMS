@@ -64,14 +64,6 @@ public class RegistrationService {
                                 .orElseThrow(() -> new RuntimeException("Error, Role ADMIN is not found"));
                         roles.add(adminRole);
                         break;
-                    case "mod":
-                        Role modRole = roleRepository
-                                .findByName(ERole.ROLE_MODERATOR)
-                                .orElseThrow(() -> new RuntimeException("Error, Role MODERATOR is not found"));
-                        roles.add(modRole);
-
-                        break;
-
                     default:
                         Role userRole = roleRepository
                                 .findByName(ERole.ROLE_USER)

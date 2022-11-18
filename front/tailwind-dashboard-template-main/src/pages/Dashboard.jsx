@@ -22,6 +22,8 @@ import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
 
 
+import '../css/style.css'
+
 function Dashboard() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);

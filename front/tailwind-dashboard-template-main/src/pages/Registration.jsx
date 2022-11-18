@@ -48,10 +48,11 @@ export default function RegistrationUser() {
     const onSubmit = async (e) => {
         try {
             await axios.post(`http://localhost:8080/api/auth/signup`, user)
+            navigate("/")
         } catch (error) {
             setErrorMessage(error.response.data.message)
         }
-        navigate("/")
+        
     }
 
     return (
