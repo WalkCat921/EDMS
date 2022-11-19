@@ -72,10 +72,10 @@ function UserMenu() {
             <li>
               <Link
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                to="/"
+                to="/main/user/settings"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                Settings
+                Настройки
               </Link>
             </li>
             <li>
@@ -84,7 +84,7 @@ function UserMenu() {
                 to="/"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                Sign Out
+                Выход
               </Link>
             </li>
           </ul>

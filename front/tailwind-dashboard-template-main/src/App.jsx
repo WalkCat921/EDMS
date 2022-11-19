@@ -22,6 +22,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 import DocumentView from './pages/DocumentView';
+import UserForm from './partials/user/UserForm';
 
 function App() {
 
