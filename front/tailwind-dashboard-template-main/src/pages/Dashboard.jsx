@@ -25,6 +25,7 @@ import AllUsers from '../partials/admin/AllUsers';
 
 import '../css/style.css'
 import { Route, useLocation } from 'react-router-dom';
+import UserForm from '../partials/user/UserForm';
 
 function Dashboard() {
 
@@ -46,6 +47,7 @@ function Dashboard() {
     <DashboardCard13 />
   </>]
   const adminPanelUsers = [<><AllUsers /></>]
+  const userForm = [<><UserForm/></>]
 
   const location = useLocation();
   const [components, setComponents] = useState([]);
@@ -113,6 +115,7 @@ function Dashboard() {
               <Routes>
                 <Route exact path='/admin' element={mainDashboardComponents}/>
                 <Route exact path="/admin/panel/users" element={adminPanelUsers}/>
+                <Route exact path = "/user/settings" element={userForm}/>
               </Routes>
 
               {/* {components} */}
