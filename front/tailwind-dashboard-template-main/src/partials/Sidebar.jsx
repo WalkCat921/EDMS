@@ -148,7 +148,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                               />
                             </svg>
                             <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Dashboard
+                              EDMS
                             </span>
                           </div>
                           {/* Icon */}
@@ -651,7 +651,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                               />
                             </svg>
                             <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Tasks
+                              Документы
                             </span>
                           </div>
                           {/* Icon */}
@@ -667,11 +667,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/main"
+                              to="/main/document"
                               className="block text-slate-400 hover:text-slate-200 transition duration-150 truncate"
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Kanban
+                                Просмотр документа
                               </span>
                             </NavLink>
                           </li>
@@ -682,7 +682,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                               className="block text-slate-400 hover:text-slate-200 transition duration-150 truncate"
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                List
+                                База документов
                               </span>
                             </NavLink>
                           </li>
@@ -722,8 +722,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       <span className="inline-flex items-center justify-center h-5 text-xs font-medium text-white bg-indigo-500 px-2 rounded">4</span>
                     </div>
                   </div>
-                </NavLink>
-              </li>
+                </NavLink></li>
               {/* Inbox */}
               <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('inbox') && 'bg-slate-900'}`}>
                 <NavLink

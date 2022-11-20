@@ -12,7 +12,7 @@ function AllUsers() {
 
 
   useEffect(() => {
-    // loadUser()
+    loadUser()
   }, []);
 
   const loadUser = async () => {
@@ -21,8 +21,7 @@ function AllUsers() {
   }
 
   const deleteUser = async(id)=>{
-    await axios.delete(`http://localhost:8080/api/users/delete/${id}`).
-    loadUser()
+    axios.delete(`http://localhost:8080/api/users/delete/${id}`).then(()=>{loadUser()})
   }
 
 
@@ -42,6 +41,7 @@ function AllUsers() {
              userList.map(user=>{
                 return(
                   <tr key={user.id}>
+              <td className='border border-slate-100'>{user.id}</td>      
               <td className='border border-slate-100'>{user.username}</td>
               <td className='border border-slate-100'>{user.email}</td>
               <td className='border border-slate-100'>{
@@ -52,7 +52,7 @@ function AllUsers() {
                   <Link className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3" to="#0">Изменить</Link>
                 </li>
                 <li>
-                  <Link className="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3" to="#0" onClick={deleteUser(user.id)}>Удалить</Link>
+                  <Link className="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3" to="#0" onClick={()=>deleteUser(user.id)}>Удалить</Link>
                 </li>
               </EditMenu></td>
             </tr>
