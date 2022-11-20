@@ -21,6 +21,7 @@ import DashboardCard12 from '../partials/dashboard/DashboardCard12';
 import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
 import AllUsers from '../partials/admin/AllUsers';
+import DocumentView from '../pages/DocumentView';
 
 
 import '../css/style.css'
@@ -48,6 +49,7 @@ function Dashboard() {
   </>]
   const adminPanelUsers = [<><AllUsers /></>]
   const userForm = [<><UserForm/></>]
+  const docViewer = [<><DocumentView/></>]
 
   const location = useLocation();
   const [components, setComponents] = useState([]);
@@ -90,7 +92,6 @@ function Dashboard() {
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
 
               {/* Left: Avatars */}
-              <DashboardAvatars />
 
               {/* Right: Actions */}
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
@@ -113,9 +114,10 @@ function Dashboard() {
             <div className="grid grid-cols-12 gap-6">
               
               <Routes>
-                <Route exact path='/admin' element={mainDashboardComponents}/>
+                <Route exact path='/' element={mainDashboardComponents}/>
                 <Route exact path="/admin/panel/users" element={adminPanelUsers}/>
-                <Route exact path = "/user/settings" element={userForm}/>
+                <Route exact path="/user/profile" element={userForm}/>
+                <Route excat path='/document' element={docViewer}/> 
               </Routes>
 
               {/* {components} */}

@@ -72,10 +72,10 @@ function UserMenu() {
             <li>
               <Link
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                to="/main/user/settings"
+                to="/main/user/profile"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                Настройки
+                Профиль
               </Link>
             </li>
             <li>
