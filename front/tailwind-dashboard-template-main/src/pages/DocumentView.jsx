@@ -1,89 +1,103 @@
 import { useState } from "react";
-
 import { Worker } from '@react-pdf-viewer/core';
-// Import the main Viewer component
-import { Viewer } from '@react-pdf-viewer/core';
-// Import the styles
+import { DocumentLoadEvent, Viewer, ProgressBar } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
-// default layout plugin
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-// Import styles of default layout plugin
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { toJSON, fromJSON } from 'flatted';
+import { dropPlugin } from '@react-pdf-viewer/drop';
+import { propertiesPlugin } from '@react-pdf-viewer/properties';
 
 import '../css/index.css'
 
-function DocumentView(){
-    const defaultLayoutPluginInstance = defaultLayoutPlugin();
+function DocumentView() {
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const dropPluginInstance = dropPlugin();
 
-    // pdf file onChange state
-    const [pdfFile, setPdfFile]=useState(null);
-  
-    // pdf file error state
-    const [pdfError, setPdfError]=useState('');
-  
-  
-    // handle file onChange event
-    const allowedFiles = ['application/pdf'];
-    const handleFile = (e) =>{
-      let selectedFile = e.target.files[0];
-      // console.log(selectedFile.type);
-      if(selectedFile){
-        if(selectedFile&&allowedFiles.includes(selectedFile.type)){
-          let reader = new FileReader();
-          reader.readAsDataURL(selectedFile);
-          reader.onloadend=(e)=>{
-            setPdfError('');
-            setPdfFile(e.target.result);
-          }
-        }
-        else{
-          setPdfError('Not a valid pdf: Please select only PDF');
-          setPdfFile('');
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfError, setPdfError] = useState('');
+  const [isAlertHidden, setIsAlertHidden] = useState(false)
+
+  const handleDocumentLoad = (e) => {
+    console.log(`Number of pages: ${e.doc.numPages}`);
+  };
+
+  const handleHideAlert = ()=> {
+    setIsAlertHidden(!isAlertHidden);
+  }
+
+  const allowedFiles = ['application/pdf'];
+  const handleFile = (e) => {
+    let selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (selectedFile && allowedFiles.includes(selectedFile.type)) {
+        let reader = new FileReader();
+        reader.readAsDataURL(selectedFile);
+        reader.onloadend = (e) => {
+          setPdfError('');
+          setPdfFile(e.target.result);
         }
       }
-      else{
-        console.log('please select a PDF');
+      else {
+        setPdfError('Неверный формат. Требуется PDF!');
+        setPdfFile('');
       }
     }
-  
-    return (
-      <div className="container">
-  
-        {/* Upload PDF */}
-        <form>
-  
-          <label><h5>Upload PDF</h5></label>
-          <br></br>
-  
-          <input type='file' className="form-control"
-          onChange={handleFile}></input>
-  
-          {/* we will display error message in case user select some file
-          other than pdf */}
-          {pdfError&&<span className='text-danger'>{pdfError}</span>}
-  
-        </form>
-  
-        {/* View PDF */}
-        <h5>View PDF</h5>
-        <div className="viewer">
-  
-          {/* render this if we have a pdf file */}
-          {pdfFile&&(
-            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-              <Viewer fileUrl={pdfFile}
-              plugins={[defaultLayoutPluginInstance]}></Viewer>
-            </Worker>
-          )}
-  
-          {/* render this if we have pdfFile state null   */}
-          {!pdfFile&&<>No file is selected yet</>}
-  
-        </div>
-  
-      </div>
-    );
+    else {
+      setPdfError('Неверный формат. Требуется PDF!');
+      setPdfFile('');
+    }
   }
+
+  return (
+    <div className="col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
+      <form className="w-full max-w">
+        <div className="flex flex-wrap mb-6">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            {
+              pdfError && <div role="alert" hidden={isAlertHidden}>
+                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                  <div className="inline-flex">
+                    Ошибка
+                    <svg onClick={() => handleHideAlert()} class="fill-current h-6 w-6 text-red-100" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" /></svg>
+                  </div>
+                </div>
+                <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700 mb-6">
+                  <p>{pdfError}</p>
+                </div>
+              </div>
+            }
+            <label className="block text-center uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+              PDF документ
+            </label>
+            <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" accept=".pdf" type="file" onChange={handleFile} />
+          </div>
+        </div>
+      </form>
+      <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 text-center" for="grid-first-name">
+        Просмотр документа
+      </label>
+      <div className="viewer">
+        {pdfFile && (
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+            <Viewer theme={{
+              theme: 'dark',
+            }} fileUrl={pdfFile}
+              plugins={[defaultLayoutPluginInstance, dropPluginInstance]}
+              onDocumentLoad={handleDocumentLoad}
+              renderLoader={(percentages) => (
+                <div style={{ width: '240px' }}>
+                  <ProgressBar progress={Math.round(percentages)} />
+                </div>
+              )}
+            ></Viewer>
+          </Worker>
+        )}
+        {!pdfFile && <>Файл не выбран</>}
+      </div>
+    </div>
+  );
+}
 
 
 export default DocumentView;
