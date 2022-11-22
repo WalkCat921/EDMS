@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import Cookies from 'universal-cookie';
+// import Cookies from 'universal-cookie';
 export default function LoginUser() {
 
     const {
@@ -33,7 +33,6 @@ export default function LoginUser() {
 
     const onSubmit = async (e) => {
         // e.preventDefault();
-        const cookies = new Cookies()
         await axios.post(`http://localhost:8080/api/auth/signin`, user)
             .then(response => {
                 let userInfo = JSON.stringify(response.data);
