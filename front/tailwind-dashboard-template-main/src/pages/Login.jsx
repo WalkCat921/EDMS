@@ -33,7 +33,6 @@ export default function LoginUser() {
 
     const onSubmit = async (e) => {
         // e.preventDefault();
-        const cookies = new Cookies()
         await axios.post(`http://localhost:8080/api/auth/signin`, user)
             .then(response => {
                 let userInfo = JSON.stringify(response.data);
