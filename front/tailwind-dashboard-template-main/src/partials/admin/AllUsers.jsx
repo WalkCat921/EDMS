@@ -1,9 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-// import LoadUsersList from '../../utils/LoadUsersList';
 import EditMenu from '../EditMenu';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 function AllUsers() {
 

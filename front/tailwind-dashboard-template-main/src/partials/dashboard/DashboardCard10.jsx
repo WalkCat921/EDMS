@@ -14,10 +14,10 @@ function DashboardCard10() {
     // loadUser()
   }, []);
 
-  const loadUser = async () => {
-    let resultList = await axios.get("http://localhost:8080/api/users/all")
-    setUserList(resultList.data)
-  }
+  // const loadUser = async () => {
+  //   let resultList = await axios.get("http://localhost:8080/api/users/all")
+  //   setUserList(resultList.data)
+  // }
 
   return (
     <div className="col-span-full xl:col-span-6 bg-white shadow-lg rounded-sm border border-slate-200">

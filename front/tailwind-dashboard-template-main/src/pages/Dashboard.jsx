@@ -3,7 +3,6 @@ import { Router, Routes } from 'react-router-dom';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
-import DashboardAvatars from '../partials/dashboard/DashboardAvatars';
 import FilterButton from '../partials/actions/FilterButton';
 import Datepicker from '../partials/actions/Datepicker';
 import DashboardCard01 from '../partials/dashboard/DashboardCard01';
@@ -22,6 +21,7 @@ import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
 import AllUsers from '../partials/admin/AllUsers';
 import DocumentView from '../pages/DocumentView';
+import AddDocument from '../pages/AddDocument';
 
 
 import '../css/style.css'
@@ -50,24 +50,12 @@ function Dashboard() {
   const adminPanelUsers = [<><AllUsers /></>]
   const userForm = [<><UserForm/></>]
   const docViewer = [<><DocumentView/></>]
+  const addDocument = [<><AddDocument/></>]
+
+ 
 
   const location = useLocation();
   const [components, setComponents] = useState([]);
-
-  // useEffect(()=>{
-  //   console.log(location.pathname)
-  //   switch (location) {
-  //     case '/main':
-  //           setComponents(mainDashboardComponents);
-  //       break;
-  //     case '/main/admin/panel/users':
-  //           setComponents(adminPanelUsers);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-
-  // },[])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -96,16 +84,16 @@ function Dashboard() {
               {/* Right: Actions */}
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                 {/* Filter button */}
-                <FilterButton />
+                {/* <FilterButton /> */}
                 {/* Datepicker built with flatpickr */}
-                <Datepicker />
+                {/* <Datepicker /> */}
                 {/* Add view button */}
-                <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
                   <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                     <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                   </svg>
                   <span className="hidden xs:block ml-2">Создать документ</span>
-                </button>
+                </button> */}
               </div>
 
             </div>
@@ -117,7 +105,8 @@ function Dashboard() {
                 <Route exact path='/' element={mainDashboardComponents}/>
                 <Route exact path="/admin/panel/users" element={adminPanelUsers}/>
                 <Route exact path="/user/profile" element={userForm}/>
-                <Route excat path='/document' element={docViewer}/> 
+                <Route excat path='/menu/document' element={docViewer}/> 
+                <Route excat path='/menu/document/add' element={addDocument}/>
               </Routes>
 
               {/* {components} */}
