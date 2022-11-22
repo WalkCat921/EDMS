@@ -24,6 +24,7 @@ import Registration from './pages/Registration';
 import DocumentView from './pages/DocumentView';
 import UserForm from './partials/user/UserForm';
 import PageNotFound from './pages/PageNotFound';
+import PrivateRoute from './utils/PrivateRoute';
 
 function App() {
 
@@ -40,8 +41,11 @@ function App() {
       <Routes>
         <Route excat path="/" element={<Login/>}/>
         <Route excat path="/registration" element={<Registration/>}/>
-        <Route exact path="/main/*" element={<Dashboard/>} />
-        <Route excat path="/doc" element={<DocumentView/>}/>
+        <Route exact path="/main/*" element={
+        <PrivateRoute>
+          <Dashboard/>
+        </PrivateRoute>
+      } />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
