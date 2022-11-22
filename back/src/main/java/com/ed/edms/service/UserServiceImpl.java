@@ -1,9 +1,7 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.Address;
 import com.ed.edms.modal.Person;
 import com.ed.edms.modal.User;
-import com.ed.edms.repository.AddressRepository;
 import com.ed.edms.repository.PersonRepository;
 import com.ed.edms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +17,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private PersonRepository personRepository;
-    @Autowired
-    private AddressRepository addressRepository;
 
     @Override
     public List<User> getAll() {
@@ -43,8 +39,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteOne(Long id) {
+    public User deleteOneUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
         userRepository.deleteById(id);
+        return user.get();
     }
 
     @Override
@@ -68,10 +66,7 @@ public class UserServiceImpl implements UserService {
         if (user.isPresent()) {
             Optional<Person> personTemp =
                     personRepository.findByPhoneNumber(person.getPhoneNumber());
-//            Optional<Address> addressTemp =
-//                    addressRepository.findByCountryAndCity("");
             if (personTemp.isPresent()) {
-//                person.setBirthdate(new java.sql.Date(person.getBirthdate().getTime()));
                 user.get().setPerson(personTemp.get());
                 user.get().getPerson().setUser(user.get());
             } else {

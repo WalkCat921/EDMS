@@ -20,7 +20,6 @@ public class Person {
     private Long id;
     private String firstName;
     private String secondName;
-    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     private Date birthDate;
     private String phoneNumber;
 

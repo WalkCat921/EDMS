@@ -9,10 +9,14 @@ import java.util.Optional;
 
 public interface UserService {
     List<User> getAll();
+
     Optional<User> getOne(Long id);
+
     Person getUserPersonDetails(Long id);
-    void deleteOne(Long id);
+
+    User deleteOneUser(Long id);
+
     User updateOneUser(Long id, User user);
+
     User updateUserDetails(Long id, Person person);
-    
 }

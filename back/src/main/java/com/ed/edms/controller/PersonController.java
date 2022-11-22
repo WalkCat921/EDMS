@@ -21,15 +21,12 @@ public class PersonController {
     private UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPersonalData(@PathVariable Long id){
-        return new ResponseEntity<>(userService.getUserPersonDetails(id),HttpStatus.OK);
+    public ResponseEntity<?> getPersonalData(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.getUserPersonDetails(id), HttpStatus.OK);
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody Person person){
-        System.out.println(person);
-        System.out.println(person.getBirthdate());
-//        System.out.println(person.getBirthdate().getTime());
+    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody Person person) {
         return new ResponseEntity<>(userService.updateUserDetails(id, person), HttpStatus.OK);
     }
 }
