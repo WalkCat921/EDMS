@@ -29,7 +29,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return new ResponseEntity<>(userDetails, HttpStatus.OK);
-
     }
 
     @GetMapping("/all")
@@ -44,7 +43,7 @@ public class UserController {
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody User user){
-        return new ResponseEntity<>(userService.updateOne(id, user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateOneUser(id, user), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

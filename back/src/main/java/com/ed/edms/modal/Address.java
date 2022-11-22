@@ -1,5 +1,7 @@
 package com.ed.edms.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,10 +17,12 @@ public class Address {
     private Long id;
     private String country;
     private String city;
+    private String street;
     private Integer houseNumber;
     private Integer flatNumber;
 
     @OneToOne(mappedBy = "address")
+    @JsonIgnore
     private Person person;
 
     public Address() {
@@ -34,6 +38,14 @@ public class Address {
 
     public String getCountry() {
         return country;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public void setCountry(String country) {
