@@ -33,24 +33,18 @@ export default function RegistrationUser() {
     const [user, setUser] = useState({
         username: "",
         password: "",
-        email: "",
-        department: ""
+        email: ""
     })
 
-    const { username, password, email, department } = user
+    const { username, password, email } = user
 
     const onInputChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value })
     }
 
     const onSubmit = async (e) => {
-        try {
-            await axios.post(`http://localhost:8080/api/auth/signup`, user)
-            navigate("/")
-        } catch (error) {
-            setErrorMessage(error.response.data.message)
-        }
-
+        await axios.post(`http://localhost:8080/api/auth/signup`, user)
+        navigate("/")
     }
 
     return (
@@ -67,7 +61,7 @@ export default function RegistrationUser() {
                         Регистрация аккаунта
                     </h2>
                 </div>
-                <form class="mt-8 space-y-6" action="#" method="POST">
+                <form class="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <input type="hidden" name="remember" value="True" />
                     <div class="rounded-md shadow-sm -space-y-px">
                         <div>
