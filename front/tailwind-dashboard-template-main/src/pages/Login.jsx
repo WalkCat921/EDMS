@@ -1,9 +1,9 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import InputMask from "react-input-mask";
+import Cookies from 'universal-cookie';
 export default function LoginUser() {
 
     const {
@@ -33,13 +33,23 @@ export default function LoginUser() {
 
     const onSubmit = async (e) => {
         // e.preventDefault();
+        const cookies = new Cookies()
         await axios.post(`http://localhost:8080/api/auth/signin`, user)
             .then(response => {
-                let token = response.data.token;
-                localStorage.setItem('jwtToken', token);
+                let userInfo = JSON.stringify(response.data);
+                localStorage.setItem('userInfo', userInfo);
+                const cookieHeaders = response.headers['Set-Cookie'];
+                console.log(cookieHeaders)
+                // cookies.set(coo)
+                console.log(cookies.get('myCat'))
                 navigate("/main")
             })
     }
+
+    // useEffect(()=>{
+    //     const cookies = new Cookies()
+    //     alert(cookies.get('myCat'))
+    // },[])
 
     return (<>
         <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -55,7 +65,7 @@ export default function LoginUser() {
                         Вход в аккаунт
                     </h2>
                 </div>
-                <form class="mt-8 space-y-6" action="#" method="POST">
+                <form class="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <input type="hidden" name="remember" value="True" />
                     <div class="rounded-md shadow-sm -space-y-px">
                         <div>
