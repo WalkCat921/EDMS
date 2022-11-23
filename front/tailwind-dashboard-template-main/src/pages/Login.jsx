@@ -37,18 +37,10 @@ export default function LoginUser() {
             .then(response => {
                 let userInfo = JSON.stringify(response.data);
                 localStorage.setItem('userInfo', userInfo);
-                const cookieHeaders = response.headers['Set-Cookie'];
-                console.log(cookieHeaders)
-                // cookies.set(coo)
-                console.log(cookies.get('myCat'))
                 navigate("/main")
             })
     }
 
-    // useEffect(()=>{
-    //     const cookies = new Cookies()
-    //     alert(cookies.get('myCat'))
-    // },[])
 
     return (<>
         <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

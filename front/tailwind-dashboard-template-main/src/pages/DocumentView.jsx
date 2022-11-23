@@ -26,33 +26,24 @@ function DocumentView() {
   const handleHideAlert = ()=> {
     setIsAlertHidden(!isAlertHidden);
   }
-
-  const uploadFile = async (file) =>{
-    await axios.put("http://localhost:8080/api/doc/upload", file)
-  }
-
-  const getFileByName = async(name)=>{
-    let file = await axios.get(`http://localhost:8080/api/doc/download/${name}`,{
-      responseType: 'blob',
-    }).then(response=>{
-      let readerResp = new FileReader();
-      readerResp.readAsDataURL(response.data)
-      readerResp.onloadend=(e)=>{
-        setPdfFile(e.target.result)
-      }
-    }).catch((error)=>{
-      alert(error)
-    })
-  }
+  // const getFileByName = async(name)=>{
+  //   let file = await axios.get(`http://localhost:8080/api/doc/download/${name}`,{
+  //     responseType: 'blob',
+  //   }).then(response=>{
+  //     let readerResp = new FileReader();
+  //     readerResp.readAsDataURL(response.data)
+  //     readerResp.onloadend=(e)=>{
+  //       setPdfFile(e.target.result)
+  //     }
+  //   }).catch((error)=>{
+  //     alert(error)
+  //   })
+  // }
   const allowedFiles = ['application/pdf'];
   const handleFile = (e) => {
     let selectedFile = e.target.files[0];
     if (selectedFile) {
       if (selectedFile && allowedFiles.includes(selectedFile.type)) {
-        let reader = new FileReader();
-        const file= new FormData();
-        file.append('file',selectedFile)
-        uploadFile(file)
         reader.readAsDataURL(selectedFile);
         reader.onloadend = (e) => {
           setPdfError('');
@@ -72,9 +63,6 @@ function DocumentView() {
 
   return (
     <div className="col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
-      {/* <form onSubmit={(e)=>{e.preventDefault}}> */}
-        <button onClick={()=>getFileByName('Жуковский')} type="submit">Download</button>
-      {/* </form> */}
       <form className="w-full max-w">
         <div className="flex flex-wrap mb-6">
           <div className="w-full px-3 mb-6 md:mb-0">
