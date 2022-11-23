@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Router, Routes } from 'react-router-dom';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
+import { Navigate } from 'react-router-dom';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
 import FilterButton from '../partials/actions/FilterButton';
 import Datepicker from '../partials/actions/Datepicker';
+import { Route, useLocation } from 'react-router-dom';
 import DashboardCard01 from '../partials/dashboard/DashboardCard01';
 import DashboardCard02 from '../partials/dashboard/DashboardCard02';
 import DashboardCard03 from '../partials/dashboard/DashboardCard03';
@@ -22,11 +24,10 @@ import Banner from '../partials/Banner';
 import AllUsers from '../partials/admin/AllUsers';
 import DocumentView from '../pages/DocumentView';
 import AddDocument from '../pages/AddDocument';
-
-
-import '../css/style.css'
-import { Route, useLocation } from 'react-router-dom';
 import UserForm from '../partials/user/UserForm';
+
+
+
 
 function Dashboard() {
 
@@ -48,11 +49,11 @@ function Dashboard() {
     <DashboardCard13 />
   </>]
   const adminPanelUsers = [<><AllUsers /></>]
-  const userForm = [<><UserForm/></>]
-  const docViewer = [<><DocumentView/></>]
-  const addDocument = [<><AddDocument/></>]
+  const userForm = [<><UserForm /></>]
+  const docViewer = [<><DocumentView /></>]
+  const addDocument = [<><AddDocument /></>]
 
- 
+
 
   const location = useLocation();
   const [components, setComponents] = useState([]);
@@ -61,27 +62,13 @@ function Dashboard() {
 
   return (
     <div className="flex h-screen overflow-hidden">
-
-      {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-      {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-
-        {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
         <main>
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-
-            {/* Welcome banner */}
             <WelcomeBanner />
-            {/* Dashboard actions */}
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
-
-              {/* Left: Avatars */}
-
-              {/* Right: Actions */}
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                 {/* Filter button */}
                 {/* <FilterButton /> */}
@@ -100,37 +87,17 @@ function Dashboard() {
 
             {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
-              
               <Routes>
-                <Route exact path='/' element={mainDashboardComponents}/>
-                <Route exact path="/admin/panel/users" element={adminPanelUsers}/>
-                <Route exact path="/user/profile" element={userForm}/>
-                <Route excat path='/menu/document' element={docViewer}/> 
-                <Route excat path='/menu/document/add' element={addDocument}/>
+                <Route exact path='/' element={mainDashboardComponents} />
+                <Route exact path="/admin/panel/users" element={adminPanelUsers} />
+                <Route exact path="/user/profile" element={userForm} />
+                <Route excat path='/menu/document' element={docViewer} />
+                <Route excat path='/menu/document/add' element={addDocument} />
               </Routes>
-
-              {/* {components} */}
-              {/* Line chart (Acme Plus) */}
-              {/* Line chart (Acme Advanced) */}
-              {/* Line chart (Acme Professional) */}
-              {/* Bar chart (Direct vs Indirect) */}
-              {/* Line chart (Real Time Value) */}
-              {/* Doughnut chart (Top Countries) */}
-              {/* Table (Top Channels) */}
-              {/* Line chart (Sales Over Time) */}
-              {/* Stacked bar chart (Sales VS Refunds) */}
-              {/* Card (Customers) */}
-              {/* Card (Reasons for Refunds) */}
-              {/* Card (Recent Activity) */}
-              {/* Card (Income/Expenses) */}
-
             </div>
-
           </div>
         </main>
-
         <Banner />
-
       </div>
     </div>
   );

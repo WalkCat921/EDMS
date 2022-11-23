@@ -11,13 +11,13 @@ function DashboardCard10() {
   const [userList, setUserList] = useState([])
 
   useEffect(() => {
-    // loadUser()
+    loadUser()
   }, []);
 
-  // const loadUser = async () => {
-  //   let resultList = await axios.get("http://localhost:8080/api/users/all")
-  //   setUserList(resultList.data)
-  // }
+  const loadUser = async () => {
+    let resultList = await axios.get("http://localhost:8080/api/users/all")
+    setUserList(resultList.data)
+  }
 
   return (
     <div className="col-span-full xl:col-span-6 bg-white shadow-lg rounded-sm border border-slate-200">
@@ -67,7 +67,7 @@ function DashboardCard10() {
                       </td>
                       <td className="p-2 whitespace-nowrap">
                         <div className="text-lg text-center">{
-                  user.roles.map(role=>role?role.name:null)
+                  user.roles.map(role=>role?role.name.substr(5).toLowerCase():null)
                 }</div>
                       </td>
                 </tr>

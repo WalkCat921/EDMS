@@ -48,8 +48,8 @@ function WelcomeBanner() {
 
       {/* Content */}
       <div className="relative">
-        <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1">Welcome, 'ADD USERNAME' 👋</h1>
-        <p>Check new messages or make something new</p>
+        <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1">Welcome, {JSON.parse(localStorage.getItem('userInfo')).username} 👋</h1>
+        <p>Check new documents or make something new</p>
       </div>
 
     </div>

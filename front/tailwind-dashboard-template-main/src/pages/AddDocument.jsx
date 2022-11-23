@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer, ProgressBar } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import { useForm } from 'react-hook-form'
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { dropPlugin } from '@react-pdf-viewer/drop';
-import { Button,Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import '../css/index.css'
@@ -18,12 +20,26 @@ function DocumentView() {
   const [pdfError, setPdfError] = useState('');
   const [isAlertHidden, setIsAlertHidden] = useState(false)
   const [documentName, setDocumentName] = useState('')
+  const [fileForm, setFileForm] = useState(new FormData())
+  let navigate = useNavigate()
+
+  const {
+    register,
+    formState: {
+      errors,
+      isValid
+    },
+    handleSubmit,
+    reset,
+  } = useForm({
+    mode: "onBlur"
+  })
 
   const handleDocumentLoad = (e) => {
     console.log(`Number of pages: ${e.doc.numPages}`);
   };
 
-  const handleHideAlert = ()=> {
+  const handleHideAlert = () => {
     setIsAlertHidden(!isAlertHidden);
   }
 
@@ -31,36 +47,42 @@ function DocumentView() {
     setDocumentName(e.target.value)
   }
 
-  const uploadFile = async (file) =>{
-    await axios.put("http://localhost:8080/api/doc/upload", file)
-  }
-
-  const getFileByName = async(name)=>{
-    let file = await axios.get(`http://localhost:8080/api/doc/download/${name}`,{
-      responseType: 'blob',
+  const uploadFile = async (file,newFileName) =>{
+    alert(file)
+    await axios.put("http://localhost:8080/api/doc/upload", file,{
+      params:{newFileName}
     }).then(response=>{
-      let readerResp = new FileReader();
-      readerResp.readAsDataURL(response.data)
-      readerResp.onloadend=(e)=>{
-        setPdfFile(e.target.result)
-      }
-    }).catch((error)=>{
-      alert(error)
+      navigate("/main/user/documents")
     })
   }
+
+  // const getFileByName = async(name)=>{
+  //   let file = await axios.get(`http://localhost:8080/api/doc/download/${name}`,{
+  //     responseType: 'blob',
+  //   }).then(response=>{
+  //     let readerResp = new FileReader();
+  //     readerResp.readAsDataURL(response.data)
+  //     readerResp.onloadend=(e)=>{
+  //       setPdfFile(e.target.result)
+  //     }
+  //   }).catch((error)=>{
+  //     alert(error)
+  //   })
+  // }
   const allowedFiles = ['application/pdf'];
   const handleFile = (e) => {
-    let selectedFile = e.target.files[0];
+    let selectedFile=e.target.files[0]
     if (selectedFile) {
       if (selectedFile && allowedFiles.includes(selectedFile.type)) {
         let reader = new FileReader();
-        const file= new FormData();
+        let file = new FormData();
+        setDocumentName(selectedFile.name)
         file.append('file',selectedFile)
-        uploadFile(file)
+        setFileForm(file)
         reader.readAsDataURL(selectedFile);
         reader.onloadend = (e) => {
           setPdfError('');
-          setPdfFile(e.target.result); 
+          setPdfFile(e.target.result);
         }
       }
       else {
@@ -69,30 +91,46 @@ function DocumentView() {
       }
     }
     else {
-      setPdfError('Неверный формат. Требуется PDF!');
+      setPdfError('Файл не выбран!');
       setPdfFile('');
     }
   }
 
   return (
     <div className="col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
-      {/* <form onSubmit={(e)=>{e.preventDefault}}> */}
-      <div className="flex flex-wrap mb-6">
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-                            Название документа:
-                        </label>
-                        <input onChange={(e)=>handleDocNameChange(e)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Введите название документа" />
-                    </div>
-                </div>
-                {<Tooltip title='Принять'>
-                            <Button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-4 mr-4" onClick={()=>getFileByName(documentName+'.pdf')}>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                </svg>
-                            </Button>
-                            </Tooltip>}
-      {/* </form> */}
+      {pdfFile &&
+        <div className="flex flex-wrap mb-6 justify-center mt-6">
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+              Название документа:
+            </label>
+            <input
+              {...register('fileName', {
+                required: "Имя файла не может быть пустым",
+                pattern: {
+                  value: /^[\d\wА-Яа-я]{1}.*\.(pdf)$/,
+                  message: "Неверный фоматр названия! Имя файла начинаеться с буквы/цифры. В конце файла должен быть тип .pdf"
+                }
+
+              })}
+              name='fileName'
+              onChange={(e) => handleDocNameChange(e)} value={documentName} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Введите название документа" />
+          </div>
+          {<Tooltip title='Принять'>
+            <Button type="submit" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-6 mr-4" onClick={() =>uploadFile(fileForm,documentName)}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.9" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+
+            </Button>
+          </Tooltip>}
+          <div>
+            {errors?.fileName && <div className="p-2 mt-5 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+              {errors?.fileName?.message}
+            </div>}
+          </div>
+        </div>
+      }
       <form className="w-full max-w">
         <div className="flex flex-wrap mb-6">
           <div className="w-full px-3 mb-6 md:mb-0">
@@ -110,7 +148,7 @@ function DocumentView() {
               </div>
             }
             <label className="block text-center uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-              PDF документ
+              PDF документ для загрузки
             </label>
             <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" accept=".pdf" type="file" onChange={handleFile} />
           </div>
@@ -135,7 +173,7 @@ function DocumentView() {
             ></Viewer>
           </Worker>
         )}
-        {!pdfFile && <>Файл не выбран</>}
+        {!pdfFile && <>Файл для загрузки не выбран</>}
       </div>
     </div>
   );
