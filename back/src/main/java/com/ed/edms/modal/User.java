@@ -1,5 +1,7 @@
 package com.ed.edms.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,11 +19,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users",
-uniqueConstraints = {
-        @UniqueConstraint(columnNames = "username"),
-        @UniqueConstraint(columnNames = "email"),
-
-})
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email"),
+        })
 public class User {
 
     @Id
@@ -41,13 +42,39 @@ public class User {
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
 
-    public User() {
-    }
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_documents",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "document_id")}
+    )
+    private Set<Document> documents = new HashSet<>();
+
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = {@JoinColumn(name = "channel_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subscriber_id")}
+    )
+    private Set<User> subscribers = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = {@JoinColumn(name = "subscriber_id")},
+            inverseJoinColumns = {@JoinColumn(name = "channel_id")}
+    )
+    private Set<User> subscriptions = new HashSet<>();
 
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+    }
+
+    public User() {
+
     }
 
     public Long getId() {
@@ -57,6 +84,8 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
+
+
 
     public String getUsername() {
         return username;
@@ -96,5 +125,29 @@ public class User {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public Set<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public Set<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Set<Document> documents) {
+        this.documents = documents;
+    }
+
+    public void setSubscribers(Set<User> subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    public Set<User> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<User> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }

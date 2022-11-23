@@ -25,36 +25,34 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/user/current")
-    public ResponseEntity<?> getCurrentUser(){
+    public ResponseEntity<?> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return new ResponseEntity<>(userDetails, HttpStatus.OK);
-
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllUsers(){
+    public ResponseEntity<?> getAllUsers() {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id){
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
         return new ResponseEntity<>(userService.getOne(id), HttpStatus.OK);
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody User user){
-        return new ResponseEntity<>(userService.updateOne(id, user), HttpStatus.OK);
+    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody User user) {
+        return new ResponseEntity<>(userService.updateOneUser(id, user), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable Long id){
-        userService.deleteOne(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.deleteOneUser(id), HttpStatus.OK);
     }
 
     @GetMapping("/user/person/{id}")
-    public ResponseEntity<?> getUserPersonDetailsById(@PathVariable Long id){
+    public ResponseEntity<?> getUserPersonDetailsById(@PathVariable Long id) {
         return new ResponseEntity<>(userService.getUserPersonDetails(id), HttpStatus.OK);
     }
 
