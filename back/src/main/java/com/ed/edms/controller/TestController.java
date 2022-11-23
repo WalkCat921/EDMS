@@ -22,12 +22,6 @@ public class TestController {
         return "User API";
     }
 
-    @GetMapping("/mod")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public String getModApi() {
-        return "Moderator API";
-    }
-
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public String getAdminApi() {

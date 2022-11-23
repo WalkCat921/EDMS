@@ -6,13 +6,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Set;
 
 // TODO statistics
-// TODO userFriends
-// TODO userDocuments
 // TODO documentService (add, delete) to user
 // TODO errorHandling
 // TODO pre-auth
+// TODO documentSharing
 
 public interface DocumentService {
     Resource downloadDocument(String filename) throws MalformedURLException;
@@ -22,4 +23,10 @@ public interface DocumentService {
     Document addDocument(MultipartFile file);
 
     Document deleteOneDocument(Long id);
+
+    Document sendOneDocument(Long userId, Long documentId);
+
+    Set<Document> getAllUserDocuments();
+
+    List<Document> getAllDocuments();
 }

@@ -1,5 +1,8 @@
 package com.ed.edms.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,12 +21,17 @@ public class Document {
     private Long id;
     private String name;
     private String type;
-    private String filepath;
+    private String fullFilePath;
     private Float size;
     private LocalDateTime creationDate;
 
     @ManyToMany(mappedBy = "documents")
+    @JsonIgnore
     private Set<User> users;
+
+    public Document() {
+
+    }
 
     public Long getId() {
         return id;
@@ -49,13 +57,7 @@ public class Document {
         this.type = type;
     }
 
-    public String getFilepath() {
-        return filepath;
-    }
 
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
-    }
 
     public Float getSize() {
         return size;
@@ -63,6 +65,14 @@ public class Document {
 
     public void setSize(long size) {
         this.size = (float) (size / 1024 / 1024);
+    }
+
+    public String getFullFilePath() {
+        return fullFilePath;
+    }
+
+    public void setFullFilePath(String fullFilePath) {
+        this.fullFilePath = fullFilePath;
     }
 
     public LocalDateTime getCreationDate() {

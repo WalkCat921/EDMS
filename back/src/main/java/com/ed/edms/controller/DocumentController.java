@@ -37,12 +37,27 @@ public class DocumentController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addDocumentToUser(@RequestParam("file") MultipartFile file){
+    public ResponseEntity<?> addDocumentToUser(@RequestParam("file") MultipartFile file) {
         return new ResponseEntity<>(documentService.addDocument(file), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteDocumentFromUser(@PathVariable Long id){
+    public ResponseEntity<?> deleteDocumentFromUser(@PathVariable Long id) {
         return new ResponseEntity<>(documentService.deleteOneDocument(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUserDocuments() {
+        return new ResponseEntity<>(documentService.getAllUserDocuments(), HttpStatus.OK);
+    }
+
+    @PostMapping("/send/{id}/{documentID}")
+    public ResponseEntity<?> sendDocumentToUser(@PathVariable Long id, @PathVariable Long documentID) {
+        return new ResponseEntity<>(documentService.sendOneDocument(id, documentID), HttpStatus.OK);
+    }
+
+    @GetMapping("/all/docs")
+    public ResponseEntity<?> getAllDocuments() {
+        return new ResponseEntity<>(documentService.getAllDocuments(), HttpStatus.OK);
     }
 }
