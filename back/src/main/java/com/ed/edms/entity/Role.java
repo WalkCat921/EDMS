@@ -1,4 +1,4 @@
-package com.ed.edms.modal;
+package com.ed.edms.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

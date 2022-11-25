@@ -1,7 +1,6 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.Document;
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.Document;
 import com.ed.edms.repository.DocumentRepository;
 import com.ed.edms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +26,13 @@ public class DocumentServiceImpl implements DocumentService {
     private final Path root = Paths.get(fileDirectory);
     CurrentUserInfoService currentUserInfoService = new CurrentUserInfoService();
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    DocumentRepository documentRepository;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
+
+    public DocumentServiceImpl(UserRepository userRepository, DocumentRepository documentRepository) {
+        this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
+    }
 
     @Override
     public Resource downloadDocument(String filename) throws MalformedURLException {

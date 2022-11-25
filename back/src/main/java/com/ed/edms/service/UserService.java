@@ -1,8 +1,8 @@
 package com.ed.edms.service;
 
 
-import com.ed.edms.modal.Person;
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.Person;
+import com.ed.edms.entity.User;
 
 import java.util.List;
 import java.util.Optional;

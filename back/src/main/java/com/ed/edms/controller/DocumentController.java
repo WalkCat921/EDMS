@@ -23,8 +23,11 @@ import java.net.MalformedURLException;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class DocumentController {
 
-    @Autowired
-    private DocumentService documentService;
+    private final DocumentService documentService;
+
+    public DocumentController(DocumentService documentService) {
+        this.documentService = documentService;
+    }
 
     @GetMapping("/download/{filename:.+}")
     public ResponseEntity<?> downloadFile(@PathVariable String filename) throws MalformedURLException {

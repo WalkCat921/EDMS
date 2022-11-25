@@ -1,6 +1,6 @@
 package com.ed.edms.repository;
 
-import com.ed.edms.modal.Document;
+import com.ed.edms.entity.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

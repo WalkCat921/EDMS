@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user/sub/")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class SubscriptionController {
-    @Autowired
-    SubscriptionService subscriptionService;
+    private final SubscriptionService subscriptionService;
+
+    public SubscriptionController(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
 
     @PostMapping("/add/{id}")
     public ResponseEntity<?> addOneSubscriptionAndSubscriber(@PathVariable Long id) {

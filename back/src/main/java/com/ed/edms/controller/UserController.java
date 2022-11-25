@@ -1,6 +1,6 @@
 package com.ed.edms.controller;
 
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.User;
 import com.ed.edms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/user/current")
     public ResponseEntity<?> getCurrentUser() {

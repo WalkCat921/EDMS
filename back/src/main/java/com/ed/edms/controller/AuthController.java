@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
-    @Autowired
-    AuthorizationService authorizationService;
-    @Autowired
-    RegistrationService registrationService;
+    private final AuthorizationService authorizationService;
+    private final RegistrationService registrationService;
+
+    public AuthController(AuthorizationService authorizationService, RegistrationService registrationService) {
+        this.authorizationService = authorizationService;
+        this.registrationService = registrationService;
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authUser(@RequestBody LoginRequest loginRequest) {

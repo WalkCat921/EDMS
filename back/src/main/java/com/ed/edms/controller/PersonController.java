@@ -1,6 +1,6 @@
 package com.ed.edms.controller;
 
-import com.ed.edms.modal.Person;
+import com.ed.edms.entity.Person;
 import com.ed.edms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user/person")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class PersonController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public PersonController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getPersonalData(@PathVariable Long id) {

@@ -1,6 +1,6 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

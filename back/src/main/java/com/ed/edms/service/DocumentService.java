@@ -1,6 +1,6 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.Document;
+import com.ed.edms.entity.Document;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 

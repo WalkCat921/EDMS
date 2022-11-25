@@ -1,7 +1,6 @@
-package com.ed.edms.modal;
+package com.ed.edms.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Set;
 

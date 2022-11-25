@@ -1,10 +1,9 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.Person;
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.Person;
+import com.ed.edms.entity.User;
 import com.ed.edms.repository.PersonRepository;
 import com.ed.edms.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -13,10 +12,13 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PersonRepository personRepository;
+    private final UserRepository userRepository;
+    private final PersonRepository personRepository;
+
+    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository) {
+        this.userRepository = userRepository;
+        this.personRepository = personRepository;
+    }
 
     @Override
     public List<User> getAll() {

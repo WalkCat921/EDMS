@@ -1,8 +1,8 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.ERole;
-import com.ed.edms.modal.Role;
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.ERole;
+import com.ed.edms.entity.Role;
+import com.ed.edms.entity.User;
 import com.ed.edms.pojo.MessageResponse;
 import com.ed.edms.pojo.SignUpRequest;
 import com.ed.edms.repository.RoleRepository;
@@ -18,17 +18,17 @@ import java.util.Set;
 
 @Service
 public class RegistrationService {
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    public RegistrationService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public ResponseEntity<?> registration(SignUpRequest signupRequest) {
 
