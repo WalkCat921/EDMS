@@ -12,7 +12,7 @@ import axios from "axios";
 
 import '../css/index.css'
 
-function DocumentView() {
+function AddDocument() {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const dropPluginInstance = dropPlugin();
 
@@ -36,7 +36,7 @@ function DocumentView() {
   })
 
   const handleDocumentLoad = (e) => {
-    console.log(`Number of pages: ${e.doc.numPages}`);
+
   };
 
   const handleHideAlert = () => {
@@ -48,7 +48,6 @@ function DocumentView() {
   }
 
   const uploadFile = async (file,newFileName) =>{
-    alert(file)
     await axios.put("http://localhost:8080/api/doc/upload", file,{
       params:{newFileName}
     }).then(response=>{
@@ -180,4 +179,4 @@ function DocumentView() {
 }
 
 
-export default DocumentView;
+export default AddDocument;
