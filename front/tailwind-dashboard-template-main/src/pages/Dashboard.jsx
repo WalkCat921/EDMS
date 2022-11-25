@@ -5,7 +5,7 @@ import Header from '../partials/Header';
 import { Navigate } from 'react-router-dom';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
 import FilterButton from '../partials/actions/FilterButton';
-import Datepicker from '../partials/actions/Datepicker';
+// import Datepicker from '../partials/actions/Datepicker';
 import { Route, useLocation } from 'react-router-dom';
 import DashboardCard01 from '../partials/dashboard/DashboardCard01';
 import DashboardCard02 from '../partials/dashboard/DashboardCard02';
@@ -25,6 +25,8 @@ import AllUsers from '../partials/admin/AllUsers';
 import DocumentView from '../pages/DocumentView';
 import AddDocument from '../pages/AddDocument';
 import UserForm from '../partials/user/UserForm';
+import AllDocumentsTable from '../pages/AllDocumentsTable';
+import ViewDownloadDocument from './ViewDownloadDocument';
 
 
 
@@ -48,10 +50,11 @@ function Dashboard() {
     <DashboardCard12 />
     <DashboardCard13 />
   </>]
-  const adminPanelUsers = [<><AllUsers /></>]
+  const allUsers = [<><AllUsers /></>]
   const userForm = [<><UserForm /></>]
   const docViewer = [<><DocumentView /></>]
   const addDocument = [<><AddDocument /></>]
+  const allDocuments = [<><AllDocumentsTable/></>]
 
 
 
@@ -70,17 +73,6 @@ function Dashboard() {
             <WelcomeBanner />
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-                {/* Filter button */}
-                {/* <FilterButton /> */}
-                {/* Datepicker built with flatpickr */}
-                {/* <Datepicker /> */}
-                {/* Add view button */}
-                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                  <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                  </svg>
-                  <span className="hidden xs:block ml-2">Создать документ</span>
-                </button> */}
               </div>
 
             </div>
@@ -89,10 +81,11 @@ function Dashboard() {
             <div className="grid grid-cols-12 gap-6">
               <Routes>
                 <Route exact path='/' element={mainDashboardComponents} />
-                <Route exact path="/admin/panel/users" element={adminPanelUsers} />
+                <Route exact path="/users" element={allUsers} />
                 <Route exact path="/user/profile" element={userForm} />
                 <Route excat path='/menu/document' element={docViewer} />
                 <Route excat path='/menu/document/add' element={addDocument} />
+                <Route excat path='/documents' element={allDocuments}/>
               </Routes>
             </div>
           </div>
