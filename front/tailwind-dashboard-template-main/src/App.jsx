@@ -14,20 +14,23 @@ import Login from './pages/Login';
 import Registration from './pages/Registration';
 import PageNotFound from './pages/PageNotFound';
 import PrivateRoute from './utils/PrivateRoute';
-import AuthTokenResponse from './utils/AuthTokenResponse'
+import UserLogged from './utils/UserLogged';
 
 function App() {
-  // useEffect(() => {
-  //   document.querySelector('html').style.scrollBehavior = 'auto'
-  //   window.scroll({ top: 0 })
-  //   document.querySelector('html').style.scrollBehavior = ''
-  // }, [location.pathname]); // triggered on route change
   
   return (
     <>
       <Routes>
-        <Route excat path="/" element={<Login />} />
-        <Route excat path="/registration" element={<Registration />} />
+        <Route excat path="/" element={
+          <UserLogged>
+            <Login />
+          </UserLogged>
+        } />
+        <Route excat path="/registration" element={
+          <UserLogged>
+          <Registration />
+        </UserLogged>
+        } />
         <Route exact path="/main/*" element={
           <PrivateRoute>
             <Dashboard />

@@ -7,6 +7,7 @@ import { AddBox, ArrowDownward } from "@material-ui/icons";
 import { render } from 'react-dom';
 import ViewDownloadDocument from '../../pages/ViewDownloadDocument';
 import '../../css/index.css'
+import SubsTable from '../SubsTable';
 
 
 function UserDocuments() {
@@ -40,8 +41,8 @@ const formatDate = (dateString) => {
       columns={[
         { title: 'Название', field: 'name' },
         { title: 'Тип', field: 'type' },
-        { title: 'Размер', field:'size'},
-        { title: 'Дата загрузки', field:'creationDate', type: 'date' }
+        { title: 'Размер (KB)', field:'size'},
+        { title: 'Дата загрузки', field:'creationDate', type: 'datetime' }
       ]}
       data={documentList}
       actions={[
@@ -58,6 +59,13 @@ const formatDate = (dateString) => {
             const author = rowData.author;
             const fileName = rowData.name;
             return(<ViewDownloadDocument author={author} fileName={fileName}/>)
+          },
+        },
+        {
+          icon: 'share',
+          tooltip: 'Поделится',
+          render: rowData => {
+            return(<SubsTable documentUserId={rowData.id}/>)
           },
         },
       ]}

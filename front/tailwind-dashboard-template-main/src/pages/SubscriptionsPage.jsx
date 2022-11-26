@@ -22,9 +22,8 @@ function Subscriptions() {
   }
 
   const deleteSubs = async (id) => {
-    await axios.delete(`http://localhost:8080/api/user/sub/delete/subscription/${id}`).then(response=>{
-        console.log('deleted')
-    })
+    await axios.delete(`http://localhost:8080/api/user/sub/delete/subscription/${id}`)
+    loadSubs();
   }
 
 
