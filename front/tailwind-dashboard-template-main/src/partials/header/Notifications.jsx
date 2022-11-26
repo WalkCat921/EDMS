@@ -61,7 +61,7 @@ function Notifications() {
           onFocus={() => setDropdownOpen(true)}
           onBlur={() => setDropdownOpen(false)}
         >
-          <div className="text-xs font-semibold text-slate-400 uppercase pt-1.5 pb-2 px-4">Notifications</div>
+          <div className="text-xs font-semibold text-slate-400 uppercase pt-1.5 pb-2 px-4">Уведомления</div>
           <ul>
             <li className="border-b border-slate-200 last:border-0">
               <Link
@@ -69,28 +69,10 @@ function Notifications() {
                 to="#0"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                <span className="block text-sm mb-2">📣 <span className="font-medium text-slate-800">Edit your information in a swipe</span> Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.</span>
-                <span className="block text-xs font-medium text-slate-400">Feb 12, 2021</span>
-              </Link>
-            </li>
-            <li className="border-b border-slate-200 last:border-0">
-              <Link
-                className="block py-2 px-4 hover:bg-slate-50"
-                to="#0"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <span className="block text-sm mb-2">📣 <span className="font-medium text-slate-800">Edit your information in a swipe</span> Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.</span>
-                <span className="block text-xs font-medium text-slate-400">Feb 9, 2021</span>
-              </Link>
-            </li>
-            <li className="border-b border-slate-200 last:border-0">
-              <Link
-                className="block py-2 px-4 hover:bg-slate-50"
-                to="#0"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <span className="block text-sm mb-2">🚀<span className="font-medium text-slate-800">Say goodbye to paper receipts!</span> Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.</span>
-                <span className="block text-xs font-medium text-slate-400">Jan 24, 2020</span>
+                <span className="block text-sm mb-2">📣 <span className="font-medium text-slate-800">Добро пожаловать!</span>
+                Самое время загрузить пару документов и поделиться ими. Если будут какие-то проблемы, мы всегда будем рады Вам помочь! Спасибо, что используете наш сервис!
+                </span>
+                <span className="block text-xs font-medium text-slate-400">{Date()}</span>
               </Link>
             </li>
           </ul>
