@@ -20,7 +20,6 @@ public class Person {
     private Long id;
     private String firstName;
     private String secondName;
-    private Date birthDate;
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -58,14 +57,6 @@ public class Person {
         this.secondName = secondName;
     }
 
-    public Date getBirthdate() {
-        return birthDate;
-    }
-
-    public void setBirthdate(Date birthdate) {
-        this.birthDate = birthdate;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -96,7 +87,6 @@ public class Person {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", birthDate=" + birthDate +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address=" + address +
                 ", user=" + user +

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    List<User> getAll();
+    List<User> getAllWithoutAuth();
 
     Optional<User> getOne(Long id);
 
@@ -19,4 +19,6 @@ public interface UserService {
     User updateOneUser(Long id, User user);
 
     User updateUserDetails(Long id, Person person);
+
+    User getCurrentUser();
 }

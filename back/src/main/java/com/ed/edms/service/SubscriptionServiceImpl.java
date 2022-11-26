@@ -23,7 +23,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return userRepository.save(getCurrentUser());
     }
 
-    //TODO handleError
     @Override
     public Set<User> getAllSubscribers() {
         if (getCurrentUser().getSubscribers() != null) {

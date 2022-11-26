@@ -19,9 +19,24 @@ public class DashboardController {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/users/country")
+    @GetMapping("/users/countries")
     public ResponseEntity<?> getUsersCountries(){
-        return new ResponseEntity<>(dashboardService, HttpStatus.OK);
+        return new ResponseEntity<>(dashboardService.getUserCountries(), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/documents")
+    public ResponseEntity<?> getUserDocuments(){
+        return new ResponseEntity<>(dashboardService.getUserDocumentsCount(), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/subscribers")
+    public ResponseEntity<?> getUserSubscribers(){
+        return new ResponseEntity<>(dashboardService.getUserSubscribersCount(), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/documents/size")
+    public ResponseEntity<?> getUserDocumentsSize(){
+        return new ResponseEntity<>(dashboardService.getUserDocumentsSizeCount(), HttpStatus.OK);
     }
 
 }

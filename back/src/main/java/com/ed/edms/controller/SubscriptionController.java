@@ -22,26 +22,31 @@ public class SubscriptionController {
         this.subscriptionService = subscriptionService;
     }
 
+    // Получаем айди чела, который идет в подписки текущего пользователя
     @PostMapping("/add/{id}")
     public ResponseEntity<?> addOneSubscriptionAndSubscriber(@PathVariable Long id) {
         return new ResponseEntity<>(subscriptionService.addSubscription(id), HttpStatus.OK);
     }
 
+    // Получаем список подписчиков текущего пользователя
     @GetMapping("/subscribers")
     public ResponseEntity<?> getAllSubscribers() {
         return new ResponseEntity<>(subscriptionService.getAllSubscribers(), HttpStatus.OK);
     }
 
+    // Получаем список подписок текущего пользователя
     @GetMapping("/subscriptions")
     public ResponseEntity<?> getAllSubscriptions() {
         return new ResponseEntity<>(subscriptionService.getAllSubscriptions(), HttpStatus.OK);
     }
 
+    // Удаляет подписку на определенного пользователя
     @DeleteMapping("/delete/subscription/{id}")
     public ResponseEntity<?> deleteSubscriber(@PathVariable Long id) {
         return new ResponseEntity<>(subscriptionService.deleteSubscription(id), HttpStatus.OK);
     }
 
+    // Удаляет подписчика текущего пользователя
     @DeleteMapping("/delete/subscriber/{id}")
     public ResponseEntity<?> deleteOneSubscriptionAndSubscriber(@PathVariable Long id) {
         return new ResponseEntity<>(subscriptionService.deleteSubscriber(id), HttpStatus.OK);

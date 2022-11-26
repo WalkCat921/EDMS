@@ -19,9 +19,9 @@ public class Document {
     private Long id;
     private String name;
     private String type;
-    private String fullFilePath;
     private Float size;
     private LocalDateTime creationDate;
+    private String author;
 
     @ManyToMany(mappedBy = "documents")
     @JsonIgnore
@@ -29,6 +29,14 @@ public class Document {
 
     public Document() {
 
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public Long getId() {
@@ -55,22 +63,12 @@ public class Document {
         this.type = type;
     }
 
-
-
     public Float getSize() {
         return size;
     }
 
     public void setSize(long size) {
-        this.size = (float) (size / 1024 / 1024);
-    }
-
-    public String getFullFilePath() {
-        return fullFilePath;
-    }
-
-    public void setFullFilePath(String fullFilePath) {
-        this.fullFilePath = fullFilePath;
+        this.size = (float) (size / 1024 );
     }
 
     public LocalDateTime getCreationDate() {

@@ -4,9 +4,9 @@ import com.ed.edms.entity.Person;
 import com.ed.edms.entity.User;
 import com.ed.edms.repository.PersonRepository;
 import com.ed.edms.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,15 +14,21 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PersonRepository personRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final CurrentUserInfoService currentUserInfoService;
 
-    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository) {
+    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.personRepository = personRepository;
+        this.passwordEncoder = passwordEncoder;
+        currentUserInfoService = new CurrentUserInfoService();
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<User> getAllWithoutAuth() {
+        List<User> users = userRepository.findAll();
+        users.remove(userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get());
+        return users;
     }
 
     @Override
@@ -54,7 +60,7 @@ public class UserServiceImpl implements UserService {
             user.get().setUsername(userToUpdate.getUsername());
             user.get().setEmail(userToUpdate.getEmail());
             user.get().setRoles(userToUpdate.getRoles());
-            user.get().setPassword(userToUpdate.getPassword());
+            user.get().setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
             return userRepository.save(user.get());
         }
         return null;
@@ -63,19 +69,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUserDetails(Long id, Person person) {
         Optional<User> user = userRepository.findById(id);
-        Date date = new Date();
-
         if (user.isPresent()) {
-            Optional<Person> personTemp =
-                    personRepository.findByPhoneNumber(person.getPhoneNumber());
-            if (personTemp.isPresent()) {
-                user.get().setPerson(personTemp.get());
-                user.get().getPerson().setUser(user.get());
-            } else {
+            if (user.get().getPerson() == null){
                 user.get().setPerson(person);
             }
             return userRepository.save(user.get());
         }
         return null;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get();
     }
 }

@@ -1,7 +1,6 @@
 package com.ed.edms.controller;
 
 import com.ed.edms.service.DocumentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,19 +27,15 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    @GetMapping("/download/{filename:.+}")
-    public ResponseEntity<?> downloadFile(@PathVariable String filename) throws MalformedURLException {
-        return ResponseEntity.ok(documentService.downloadDocument(filename));
-    }
-
-    @PutMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseEntity<>(documentService.uploadDocument(file), HttpStatus.OK);
+    @GetMapping("/download/{author}/{filename:.+}")
+    public ResponseEntity<?> downloadFile(@PathVariable String filename, @PathVariable String author) throws MalformedURLException {
+        return ResponseEntity.ok(documentService.downloadDocument(filename, author));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addDocumentToUser(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(documentService.addDocument(file), HttpStatus.OK);
+    public ResponseEntity<?> addDocumentToUser(@RequestParam("file") MultipartFile file,
+                                               @RequestParam("fileName") String fileName) throws IOException {
+        return new ResponseEntity<>(documentService.addDocument(file, fileName), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -49,7 +43,7 @@ public class DocumentController {
         return new ResponseEntity<>(documentService.deleteOneDocument(id), HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/mydocs")
     public ResponseEntity<?> getAllUserDocuments() {
         return new ResponseEntity<>(documentService.getAllUserDocuments(), HttpStatus.OK);
     }

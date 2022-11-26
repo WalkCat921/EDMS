@@ -1,9 +1,9 @@
 package com.ed.edms.service;
 
 import com.ed.edms.entity.Document;
+import com.ed.edms.entity.User;
 import com.ed.edms.repository.DocumentRepository;
 import com.ed.edms.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -15,19 +15,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
     private static final String fileDirectory = System.getProperty("user.dir") + "/documents/";
     private final Path root = Paths.get(fileDirectory);
-    CurrentUserInfoService currentUserInfoService = new CurrentUserInfoService();
-
     private final UserRepository userRepository;
     private final DocumentRepository documentRepository;
+    CurrentUserInfoService currentUserInfoService = new CurrentUserInfoService();
 
     public DocumentServiceImpl(UserRepository userRepository, DocumentRepository documentRepository) {
         this.userRepository = userRepository;
@@ -35,39 +34,46 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Resource downloadDocument(String filename) throws MalformedURLException {
-        return new UrlResource(root.resolve(filename).toUri());
+    public Resource downloadDocument(String filename, String author) throws MalformedURLException {
+        return new UrlResource(root.resolve(author).resolve(filename).toUri());
     }
 
-    @Override
-    public String uploadDocument(MultipartFile file) throws IOException {
+    private void uploadDocument(MultipartFile file, String fileName) throws IOException {
         Files.createDirectories(Paths.get(fileDirectory +
                 currentUserInfoService.getCurrentUsername()));
         Path filePath = Paths.get(fileDirectory +
-                currentUserInfoService.getCurrentUsername(), file.getOriginalFilename());
+                currentUserInfoService.getCurrentUsername(), fileName);
         Files.write(filePath, file.getBytes());
-        try (Stream<Path> files = Files.list(Paths.get(fileDirectory +
-                currentUserInfoService.getCurrentUsername()))) {
-            long count = files.count();
-            System.out.println(count);
-        }
-        return "File uploaded " + file.getOriginalFilename();
+//        try (Stream<Path> files = Files.list(Paths.get(fileDirectory +
+//                currentUserInfoService.getCurrentUsername()))) {
+//            long count = files.count();
+//            System.out.println(count);
+//        }
+//        return "File uploaded " + file.getOriginalFilename();
     }
 
     @Override
-    public Document addDocument(MultipartFile file) {
+    public User addDocument(MultipartFile file, String fileName) throws IOException {
         Document document = new Document();
-        document.setName(file.getName());
+        document.setAuthor(currentUserInfoService.getCurrentUsername());
+        document.setName(fileName);
         document.setType(file.getContentType());
         document.setSize(file.getSize());
         document.setCreationDate(LocalDateTime.now());
-        document.setFullFilePath(file.getOriginalFilename());
-//        Optional<User> user =
-//                userRepository.findByUsername(currentUserInfoService.getCurrentUsername());
-//        user.get().getDocuments().add(document);
-//        userRepository.save(user.get());
-        documentRepository.save(document);
-        return document;
+        uploadDocument(file, fileName);
+        User user = userRepository
+                .findByUsername(currentUserInfoService.getCurrentUsername())
+                .get();
+        if (user.getDocuments() != null) {
+            user.getDocuments().add(document);
+        } else {
+            Set<Document> documents = new HashSet<>();
+            documents.add(document);
+            user.setDocuments(documents);
+        }
+        userRepository.save(user);
+//        documentRepository.save(document);
+        return user;
     }
 
     @Override
@@ -98,8 +104,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Set<Document> getAllUserDocuments() {
-        return userRepository.findByUsername(currentUserInfoService
-                .getCurrentUsername()).get().getDocuments();
+        return userRepository
+                .findByUsername(currentUserInfoService.getCurrentUsername()).get()
+                .getDocuments();
     }
 
     @Override
