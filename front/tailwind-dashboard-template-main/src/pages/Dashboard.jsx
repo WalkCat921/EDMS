@@ -32,6 +32,7 @@ import Subscriptions from './SubscriptionsPage';
 import Subscribers from './SubscriberPage';
 import FAQ from './FAQ';
 import Support from './Suppport';
+import AuthTokenResponse from '../utils/AuthTokenResponse'
 
 
 
@@ -65,13 +66,17 @@ function Dashboard() {
   const userSubscribers = [<><Subscribers/></>]
   const helpFAQ = [<><FAQ/></>]
   const helpSupport = [<><Support/></>]
-
-
-
   const location = useLocation();
   const [components, setComponents] = useState([]);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (userInfo?.token) {
+      AuthTokenResponse(userInfo.token)
+    }
+  })
+
 
   return (
     <div className="flex h-screen overflow-hidden">

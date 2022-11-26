@@ -22,14 +22,6 @@ function App() {
   //   window.scroll({ top: 0 })
   //   document.querySelector('html').style.scrollBehavior = ''
   // }, [location.pathname]); // triggered on route change
-
-  useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    if (userInfo?.token) {
-      AuthTokenResponse(userInfo.token)
-    }
-  })
-
   
   return (
     <>

@@ -15,7 +15,7 @@ function UserDocuments() {
   const [document, setDosument] = useState({})
 
   const loadDocuments = async () => {
-    let resultList = await axios.get("http://localhost:8080/api/doc/myDoc")
+    let resultList = await axios.get("http://localhost:8080/api/doc/mydocs")
     setDocumentList(resultList.data)
   }
 
@@ -39,7 +39,6 @@ const formatDate = (dateString) => {
       title="Документы"
       columns={[
         { title: 'Название', field: 'name' },
-        { title: 'Автор', field:'author' },
         { title: 'Тип', field: 'type' },
         { title: 'Размер', field:'size'},
         { title: 'Дата загрузки', field:'creationDate', type: 'date' }
