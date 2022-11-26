@@ -35,29 +35,23 @@ export default function UserForm() {
         person: person
     })
 
-
-    let yes = true;
-
     const {
         register,
+        setValue,
         formState: {
             errors,
-            touchedFields: {
-                email, firstName
-            }
         },
         control,
         handleSubmit
     } = useForm({
-        defaultValues: {
-            username: user.username,
-            email: user.email,
-            firstName: person.firstName
-          }
+        mode:'onBlur'
     })
     useEffect(() => {
         getUser()
     }, []);
+
+
+    
 
     const handleEditButton = () => {
         setIsFieldAvaible(!isFieldAvaible)
@@ -120,7 +114,7 @@ export default function UserForm() {
                         <label className="block uppercase tracking-wide text-gray-700 text-xs text-center font-bold mb-2" for="grid-first-name">
                             Личный номер:{user.id}
                         </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="hidden" value={user.id} placeholder="Имя пользователя" />
+                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="hidden" value={user?.id} placeholder="Имя пользователя" />
                     </div>
                 </div>
                 <div className="flex flex-wrap mb-6">
@@ -129,17 +123,15 @@ export default function UserForm() {
                             Имя пользователя:
                         </label>
                         <input
-                            // isTouched={true}
                             name='username'
-                            value={user.username}
+                            value={user?.username}
                             {...register('username', {
                                 required: "Обязательное поле",
-                                value: user.username
+
                             })}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
                             type="text"
-                            
                             placeholder="Имя пользователя"
                             onChange={(e) => onUserInput(e)}
                         />
@@ -155,7 +147,6 @@ export default function UserForm() {
                         </label>
                         <input
                         {...register('email', {
-                                // value: user.email,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
@@ -167,7 +158,7 @@ export default function UserForm() {
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
                             type="text"
-                            value={user.email}
+                            value={user?.email}
                             placeholder="Email"
                             onChange={(e) => onUserInput(e)}
                         />
@@ -177,7 +168,7 @@ export default function UserForm() {
                         </div>}
                     </div>
                     </div>
-                    <div className="w-full md:w-1/2 px-3 mb-6">
+                    {/* <div className="w-full md:w-1/2 px-3 mb-6">
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
                             Новый пароль:
                         </label>
@@ -201,8 +192,8 @@ export default function UserForm() {
                             {errors?.newPassword?.message}
                         </div>}
                     </div>
-                    </div>
-                    <div className="w-full md:w-1/2 px-3 mb-6">
+                    </div> */}
+                    {/* <div className="w-full md:w-1/2 px-3 mb-6">
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
                             Повтор нового пароля:
                         </label>
@@ -222,7 +213,7 @@ export default function UserForm() {
                             {errors?.confirmPassword?.message}
                         </div>}
                     </div>
-                    </div>
+                    </div> */}
                     
                 </div>
                 <div className="flex flex-wrap mb-6 justify-center text-center">
@@ -236,7 +227,7 @@ export default function UserForm() {
                             </div>
                         </label>
                         <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                            type="hidden" value={user.id} placeholder="Имя пользователя" />
+                            type="hidden" value={user?.id} placeholder="Имя пользователя" />
                     </div>
                 </div>
                 <div className="flex flex-wrap mb-6">
@@ -246,7 +237,6 @@ export default function UserForm() {
                         </label>
                         <input
                             {...register('secondName', {
-                                // value: person.secondName,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^([a-zA-z]{2,}|[А-яЁё]{2,})$/,
@@ -256,7 +246,7 @@ export default function UserForm() {
                             })}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
-                            value={person.secondName}
+                            value={person?.secondName}
                             type="text"
                             name='secondName'
                             placeholder="Фамилия"
@@ -274,7 +264,6 @@ export default function UserForm() {
                         </label>
                         <input
                             {...register('firstName', {
-                                // value: person.firstName,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^([a-zA-z]{2,}|[А-яЁё]{2,})$/,
@@ -283,7 +272,7 @@ export default function UserForm() {
                             })}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
-                            value={person.firstName}
+                            value={person?.firstName}
                             type="text"
                             name='firstName'
                             placeholder="Имя"
@@ -303,7 +292,6 @@ export default function UserForm() {
                         alwaysShowMask={true}
                         mask='+375 (99) 999-99-99'
                             {...register('phoneNumber', {
-                                // value: person.phoneNumber,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^(\+375|80) \((29|25|44|33)\) (\d{3})\-(\d{2})\-(\d{2})$/,
@@ -312,8 +300,7 @@ export default function UserForm() {
                             })}
                             inputMode="numeric"
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                            // disabled={!isFieldAvaible}
-                            value={person.phoneNumber}
+                            value={person?.phoneNumber}
                             type="text"
                             name='phoneNumber'
                             placeholder="Телефон"
@@ -331,14 +318,13 @@ export default function UserForm() {
                         </label>
                         <input
                             {...register('country', {
-                                // value: address.country,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^([a-zA-z]{2,}|[А-яЁё]{2,})$/,
                                     message: "Страна должна состять минимум из 2 букв. Не содержать символов"
                                 }
                             })}
-                            value={address.country}
+                            value={address?.country}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
                             type="text"
@@ -357,9 +343,8 @@ export default function UserForm() {
                             Город:
                         </label>
                         <input
-                            value={address.city}
+                            value={address?.city}
                             {...register('city', {
-                                // value: address.city,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^([a-zA-z]{2,}|[А-яЁё]{2,})$/,
@@ -385,14 +370,13 @@ export default function UserForm() {
                         </label>
                         <input
                             {...register('street', {
-                                // value: address.street,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^([a-zA-z]{2,}|[А-яЁё]{2,})$/,
                                     message: "Улица должна состять минимум из 2 букв. Не содержать символов"
                                 }
                             })}
-                            value={address.street}
+                            value={address?.street}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
                             type="text"
@@ -412,7 +396,6 @@ export default function UserForm() {
                         </label>
                         <input
                             {...register('houseNumber', {
-                                // value: address.houseNumber,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^[\d]{1,5}$/,
@@ -420,7 +403,7 @@ export default function UserForm() {
                                 }
 
                             })}
-                            value={address.houseNumber}
+                            value={address?.houseNumber}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
                             type="number"
@@ -445,14 +428,13 @@ export default function UserForm() {
                         </label>
                         <input
                             {...register('flatNumber', {
-                                // value: address.flatNumber,
                                 required: "Обязательное поле",
                                 pattern: {
                                     value: /^[\d]{1,5}$/,
                                     message: "Номер квартире должен состоять из цифр. Неболее 5"
                                 }
                             })}
-                            value={address.flatNumber}
+                            value={address?.flatNumber}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             // disabled={!isFieldAvaible}
                             type="number"
@@ -468,14 +450,14 @@ export default function UserForm() {
                     </div>
                     <div className="w-full md:w-1/1 px-3">
                         <div class="inline-flex">
-                            <Tooltip title='Редактировать'>
+                            {/* <Tooltip title='Редактировать'>
                                 <Button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-4 mr-4" onClick={(e) => handleEditButton(e)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                                     </svg>
                                 </Button>
 
-                            </Tooltip>
+                            </Tooltip> */}
                             {/* <Tooltip title='Принять'> */}
                                 <button type='submit' class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-4 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -489,46 +471,6 @@ export default function UserForm() {
             </form>
             <DevTool control={control} />
         </div>
-        {/* <div className="col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border">
-            <table className="table-auto w-full">
-                <thead>
-                    <tr >
-                        <th colSpan={6} className='p-4 border-b-2'>Мои документы</th>
-                    </tr>
-                    <tr>
-                        <th className='border-r-2 border-b-2 p-3'>Тип</th>
-                        <th className='border-r-2 border-b-2'>Название</th>
-                        <th className='border-r-2 border-b-2'>Дата загрузки</th>
-                        <th className='border-r-2 border-b-2'>Размер</th>
-                        <th className='border-r-2 border-b-2'>Автор</th>
-                        <th className='border-b-2'>Функции</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr className='border-t-2 text-center'>
-                        <td className='p-6'>PDF</td>
-                        <td>Test PDF File</td>
-                        <td>19.11.2022</td>
-                        <td>200 KB</td>
-                        <td>Egor</td>
-                        <td className='text-center'><EditMenu className="relative inline-flex">
-                            <li>
-                                <Link className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3" to="#0">Открыть</Link>
-                            </li>
-                            <li>
-                                <Link className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3" to="#0">Скачать</Link>
-                            </li>
-                            <li>
-                                <Link className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3" to="#0">Изменить</Link>
-                            </li>
-                            <li>
-                                <Link className="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3" to="#0">Удалить</Link>
-                            </li>
-                        </EditMenu></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> */}
     </>
     )
 }
