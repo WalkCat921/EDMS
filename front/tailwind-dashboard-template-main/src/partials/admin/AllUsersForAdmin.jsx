@@ -28,7 +28,8 @@ function AllUsersForAdmin() {
 
 
   const deleteUser = async (id) => {
-    axios.delete(`http://localhost:8080/api/users/delete/${id}`).then(() => { loadUser() })
+    axios.delete(`http://localhost:8080/api/users/delete/${id}`)
+    window.location.reload()
   }
 
   const getUserFromList = (id) => {

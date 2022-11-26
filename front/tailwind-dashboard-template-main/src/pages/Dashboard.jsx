@@ -30,6 +30,8 @@ import AllUsersForAdmin from '../partials/admin/AllUsersForAdmin';
 import UserDocuments from '../partials/user/UserDocuments';
 import Subscriptions from './SubscriptionsPage';
 import Subscribers from './SubscriberPage';
+import FAQ from './FAQ';
+import Support from './Suppport';
 
 
 
@@ -61,6 +63,8 @@ function Dashboard() {
   const userDocuments = [<><UserDocuments/></>]
   const userSubscriptions = [<><Subscriptions/></>]
   const userSubscribers = [<><Subscribers/></>]
+  const helpFAQ = [<><FAQ/></>]
+  const helpSupport = [<><Support/></>]
 
 
 
@@ -96,6 +100,8 @@ function Dashboard() {
                 <Route excat path='/document/add' element={addDocument} />
                 <Route excat path='/admin/documents' element={allDocuments}/>
                 <Route excat path='/admin/users' element={allUsersForAdmin}/>
+                <Route excat path='/help/faq' element={helpFAQ}/>
+                <Route excat path='/help/support' element={helpSupport}/>
               </Routes>
             </div>
           </div>

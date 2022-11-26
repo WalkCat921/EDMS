@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Worker } from '@react-pdf-viewer/core';
+import  { ToolbarSlot, TransformToolbarSlot } from '@react-pdf-viewer/toolbar';
+import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import { DocumentLoadEvent, Viewer, ProgressBar } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -14,6 +16,8 @@ import '../css/index.css'
 function DocumentView() {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const dropPluginInstance = dropPlugin();
+  const toolbarPluginInstance = toolbarPlugin();
+  const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
 
   const [pdfFile, setPdfFile] = useState(null);
   const [pdfError, setPdfError] = useState('');
@@ -21,6 +25,11 @@ function DocumentView() {
 
   const handleDocumentLoad = (e) => {
   };
+
+  const transform = (slot) => ({
+    ...slot,
+    Download: ()=><></>,
+  })
 
   const handleHideAlert = ()=> {
     setIsAlertHidden(!isAlertHidden);
@@ -67,14 +76,14 @@ function DocumentView() {
               </div>
             </div>
           }
-          <label className="block text-center uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+          <label className="block text-center uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             PDF документ для просмотра
           </label>
           <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" accept=".pdf" type="file" onChange={handleFile} />
         </div>
       </div>
     </form>
-    <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 text-center" for="grid-first-name">
+    <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 text-center">
       Просмотр документа
     </label>
     <div className="viewer">
@@ -83,7 +92,7 @@ function DocumentView() {
           <Viewer theme={{
             theme: 'dark',
           }} fileUrl={pdfFile}
-            plugins={[defaultLayoutPluginInstance, dropPluginInstance]}
+            plugins={[defaultLayoutPluginInstance, dropPluginInstance, toolbarPluginInstance]}
             onDocumentLoad={handleDocumentLoad}
             renderLoader={(percentages) => (
               <div style={{ width: '240px' }}>
