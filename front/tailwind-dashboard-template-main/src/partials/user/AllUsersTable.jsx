@@ -3,16 +3,18 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import EditMenu from '../EditMenu';
 import MaterialTable from 'material-table'
+import { useCurrentUser } from '../../utils/useCurrentUser'
 import { Checkbox, Select, MenuItem } from '@material-ui/core'
 import { AddBox, ArrowDownward } from "@material-ui/icons";
 
 
-function AllUsers() {
+function AllUsersTable() {
 
   const [userList, setUserList] = useState([])
   const [errorMessage, setErrorMessage] = useState('')
   const [showModal, setShowModal] = React.useState(false);
   const [userFromList, setUserFromList] = useState({})
+  // const [currentUser, setCurrentUser] = useCurrentUser();
   // const [filter, setFilter]=useState(true)
 
   const loadUser = async () => {
@@ -21,21 +23,15 @@ function AllUsers() {
   }
 
 
+  const subOnUser = async(id)=>{
+    await axios.post(`http://localhost:8080/api/user/sub/add/${id}`).then(response=>{
+      console.log('successfull')
+    })
+  }
+
   useEffect(() => {
     loadUser();
   }, []);
-
-
-
-  const deleteUser = async (id) => {
-    axios.delete(`http://localhost:8080/api/users/delete/${id}`).then(() => { loadUser() })
-  }
-
-  const getUserFromList = (id) => {
-    setUserFromList(userList[id])
-  }
-
-
 
 
   return (<>
@@ -53,20 +49,19 @@ function AllUsers() {
             {
               icon: 'person',
               tooltip: 'Профиль',
-              onClick: (event, rowData) => {setShowModal(true); setUserFromList(rowData) }
+              onClick: (event, rowData) => { setShowModal(true); setUserFromList(rowData) }
             },
-            rowData => ({
-              hidden: rowData.roles.map(role => role === 'ROLE_USER' ? flase : true),
-              icon: 'delete',
-              tooltip: 'Удалить',
-              onClick: (event, rowData) => deleteUser(rowData.id)
-            })
+            {
+              icon: 'person_add',
+              tooltip: 'Подписаться',
+              onClick: (event,rowData) => { subOnUser(rowData.id) }
+            }
           ]}
           options={{
             actionsColumnIndex: -1,
             exportButton: true,
           }}
-          
+
         />
 
       </div>
@@ -116,7 +111,7 @@ function AllUsers() {
                         </tr>
                         <tr>
                           <td className='border border-slate-300'>Статус</td>
-                          <td className='border border-slate-300'>{userFromList.roles.map(role => role.name.substr(5).toLowerCase()==='user' ? 'Пользователь' : 'Администратор')}</td>
+                          <td className='border border-slate-300'>{userFromList.roles.map(role => role.name.substr(5).toLowerCase() === 'user' ? 'Пользователь' : 'Администратор')}</td>
                         </tr>
                         <tr>
                           <td colSpan={2} className='border border-slate-300 text-center'>Информация</td>
@@ -182,4 +177,4 @@ function AllUsers() {
   )
 }
 
-export default AllUsers;
+export default AllUsersTable;

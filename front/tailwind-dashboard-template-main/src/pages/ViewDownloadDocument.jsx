@@ -23,8 +23,8 @@ export default function ViewDownloadDocument({author, fileName}) {
   },[])
 
 
-  const getFileByName = (userName,name)=>{
-    let file = axios.get(`http://localhost:8080/api/doc/download/${userName}/${name}`,{
+  const getFileByName = (creator,name)=>{
+    let file = axios.get(`http://localhost:8080/api/doc/download/${creator}/${name}`,{
       responseType: 'blob',
     }).then(response=>{
       let readerResp = new FileReader();
@@ -43,6 +43,7 @@ export default function ViewDownloadDocument({author, fileName}) {
             <Viewer theme={{
               theme: 'dark',
             }} fileUrl={pdfFile}
+            on
               plugins={[defaultLayoutPluginInstance, dropPluginInstance]}
               renderLoader={(percentages) => (
                 <div style={{ width: '240px' }}>

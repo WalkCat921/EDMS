@@ -13,10 +13,9 @@ function UserMenu() {
   const dropdown = useRef(null);
 
   const logoutUser = async()=>{
-    await axios.get('http://localhost:8080/api/users/user/current').then(response=>{
-      alert(response.data)
+    await axios.get('http://localhost:8080/logout').then(response=>{
+      localStorage.removeItem('userInfo')
       })
-    localStorage.removeItem('userInfo')
   }
 
   // close on click outside

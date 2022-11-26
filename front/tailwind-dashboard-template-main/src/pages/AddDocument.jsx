@@ -47,9 +47,9 @@ function AddDocument() {
     setDocumentName(e.target.value)
   }
 
-  const uploadFile = async (file,newFileName) =>{
-    await axios.put("http://localhost:8080/api/doc/upload", file,{
-      params:{newFileName}
+  const uploadFile = async (file,fileName) =>{
+    await axios.put("http://localhost:8080/api/doc/add", file,{
+      params:{fileName}
     }).then(response=>{
       navigate("/main/user/documents")
     })

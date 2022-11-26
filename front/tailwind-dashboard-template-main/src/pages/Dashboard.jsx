@@ -21,13 +21,15 @@ import DashboardCard11 from '../partials/dashboard/DashboardCard11';
 import DashboardCard12 from '../partials/dashboard/DashboardCard12';
 import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
-import AllUsers from '../partials/admin/AllUsers';
 import DocumentView from '../pages/DocumentView';
 import AddDocument from '../pages/AddDocument';
 import UserForm from '../partials/user/UserForm';
 import AllDocumentsTable from '../pages/AllDocumentsTable';
-import ViewDownloadDocument from './ViewDownloadDocument';
-
+import AllUsersTable from '../partials/user/AllUsersTable';
+import AllUsersForAdmin from '../partials/admin/AllUsersForAdmin';
+import UserDocuments from '../partials/user/UserDocuments';
+import Subscriptions from './SubscriptionsPage';
+import Subscribers from './SubscriberPage';
 
 
 
@@ -50,11 +52,15 @@ function Dashboard() {
     <DashboardCard12 />
     <DashboardCard13 />
   </>]
-  const allUsers = [<><AllUsers /></>]
+  const allUsersForAdmin = [<><AllUsersForAdmin/></>]
+  const allUsersTable = [<><AllUsersTable/></>]
   const userForm = [<><UserForm /></>]
   const docViewer = [<><DocumentView /></>]
   const addDocument = [<><AddDocument /></>]
   const allDocuments = [<><AllDocumentsTable/></>]
+  const userDocuments = [<><UserDocuments/></>]
+  const userSubscriptions = [<><Subscriptions/></>]
+  const userSubscribers = [<><Subscribers/></>]
 
 
 
@@ -81,11 +87,15 @@ function Dashboard() {
             <div className="grid grid-cols-12 gap-6">
               <Routes>
                 <Route exact path='/' element={mainDashboardComponents} />
-                <Route exact path="/users" element={allUsers} />
+                <Route exact path="/users" element={allUsersTable} />
                 <Route exact path="/user/profile" element={userForm} />
-                <Route excat path='/menu/document' element={docViewer} />
-                <Route excat path='/menu/document/add' element={addDocument} />
-                <Route excat path='/documents' element={allDocuments}/>
+                <Route excat path='/user/documents' element={userDocuments}/>
+                <Route excat path='/user/subscriptions' element={userSubscriptions}/>
+                <Route excat path='user/subscribers' element={userSubscribers}/>
+                <Route excat path='/document' element={docViewer} />
+                <Route excat path='/document/add' element={addDocument} />
+                <Route excat path='/admin/documents' element={allDocuments}/>
+                <Route excat path='/admin/users' element={allUsersForAdmin}/>
               </Routes>
             </div>
           </div>

@@ -5,17 +5,17 @@ import MaterialTable from 'material-table'
 import { Checkbox, Select, MenuItem } from '@material-ui/core'
 import { AddBox, ArrowDownward } from "@material-ui/icons";
 import { render } from 'react-dom';
-import ViewDownloadDocument from './ViewDownloadDocument';
-import '../css/index.css'
+import ViewDownloadDocument from '../../pages/ViewDownloadDocument';
+import '../../css/index.css'
 
 
-function AllDocumentsTable() {
+function UserDocuments() {
 
   const [documentList, setDocumentList] = useState([])
   const [document, setDosument] = useState({})
 
   const loadDocuments = async () => {
-    let resultList = await axios.get("http://localhost:8080/api/doc/all/docs")
+    let resultList = await axios.get("http://localhost:8080/api/doc/myDoc")
     setDocumentList(resultList.data)
   }
 
@@ -41,13 +41,12 @@ const formatDate = (dateString) => {
         { title: 'Название', field: 'name' },
         { title: 'Автор', field:'author' },
         { title: 'Тип', field: 'type' },
-        { title: 'Размер (KB)', field:'size', type:'numeric'},
-        { title: 'Дата загрузки', field:'creationDate', type: 'datetime' }
+        { title: 'Размер', field:'size'},
+        { title: 'Дата загрузки', field:'creationDate', type: 'date' }
       ]}
       data={documentList}
       actions={[
         rowData => ({
-          // hidden: JSON.parse(localStorage.getItem('userInfo')).roles.map(role => role === 'ROLE_USER' ? false : true),
           icon: 'delete',
           tooltip: 'Удалить',
           onClick: (event, rowData) => deleteDocument(rowData.id)
@@ -85,4 +84,4 @@ const formatDate = (dateString) => {
   )
 }
 
-export default AllDocumentsTable;
+export default UserDocuments;
