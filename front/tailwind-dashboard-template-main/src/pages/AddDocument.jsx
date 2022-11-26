@@ -48,26 +48,12 @@ function AddDocument() {
   }
 
   const uploadFile = async (file,fileName) =>{
-    await axios.put("http://localhost:8080/api/doc/add", file,{
+    await axios.post("http://localhost:8080/api/doc/add", file,{
       params:{fileName}
     }).then(response=>{
       navigate("/main/user/documents")
     })
   }
-
-  // const getFileByName = async(name)=>{
-  //   let file = await axios.get(`http://localhost:8080/api/doc/download/${name}`,{
-  //     responseType: 'blob',
-  //   }).then(response=>{
-  //     let readerResp = new FileReader();
-  //     readerResp.readAsDataURL(response.data)
-  //     readerResp.onloadend=(e)=>{
-  //       setPdfFile(e.target.result)
-  //     }
-  //   }).catch((error)=>{
-  //     alert(error)
-  //   })
-  // }
   const allowedFiles = ['application/pdf'];
   const handleFile = (e) => {
     let selectedFile=e.target.files[0]
@@ -100,7 +86,7 @@ function AddDocument() {
       {pdfFile &&
         <div className="flex flex-wrap mb-6 justify-center mt-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               Название документа:
             </label>
             <input
@@ -146,14 +132,14 @@ function AddDocument() {
                 </div>
               </div>
             }
-            <label className="block text-center uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+            <label className="block text-center uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" >
               PDF документ для загрузки
             </label>
             <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" accept=".pdf" type="file" onChange={handleFile} />
           </div>
         </div>
       </form>
-      <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 text-center" for="grid-first-name">
+      <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 text-center" >
         Просмотр документа
       </label>
       <div className="viewer">

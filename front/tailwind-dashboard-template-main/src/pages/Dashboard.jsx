@@ -30,6 +30,9 @@ import AllUsersForAdmin from '../partials/admin/AllUsersForAdmin';
 import UserDocuments from '../partials/user/UserDocuments';
 import Subscriptions from './SubscriptionsPage';
 import Subscribers from './SubscriberPage';
+import FAQ from './FAQ';
+import Support from './Suppport';
+import AuthTokenResponse from '../utils/AuthTokenResponse'
 
 
 
@@ -61,13 +64,19 @@ function Dashboard() {
   const userDocuments = [<><UserDocuments/></>]
   const userSubscriptions = [<><Subscriptions/></>]
   const userSubscribers = [<><Subscribers/></>]
-
-
-
+  const helpFAQ = [<><FAQ/></>]
+  const helpSupport = [<><Support/></>]
   const location = useLocation();
   const [components, setComponents] = useState([]);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (userInfo?.token) {
+      AuthTokenResponse(userInfo.token)
+    }
+  })
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -96,6 +105,8 @@ function Dashboard() {
                 <Route excat path='/document/add' element={addDocument} />
                 <Route excat path='/admin/documents' element={allDocuments}/>
                 <Route excat path='/admin/users' element={allUsersForAdmin}/>
+                <Route excat path='/help/faq' element={helpFAQ}/>
+                <Route excat path='/help/support' element={helpSupport}/>
               </Routes>
             </div>
           </div>

@@ -39,7 +39,6 @@ const formatDate = (dateString) => {
       title="Документы"
       columns={[
         { title: 'Название', field: 'name' },
-        { title: 'Автор', field:'author' },
         { title: 'Тип', field: 'type' },
         { title: 'Размер', field:'size'},
         { title: 'Дата загрузки', field:'creationDate', type: 'date' }

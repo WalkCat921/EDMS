@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import  { ToolbarSlot, TransformToolbarSlot } from '@react-pdf-viewer/toolbar';
+import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer, ProgressBar } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -12,8 +14,15 @@ import '../css/index.css'
 export default function ViewDownloadDocument({author, fileName}) {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const dropPluginInstance = dropPlugin();
+  const toolbarPluginInstance = toolbarPlugin();
+  const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
 
   const [pdfFile, setPdfFile] = useState(null);
+
+  const transform = (slot) => ({
+    ...slot,
+    Download: ()=><></>,
+  })
 
 
 
@@ -44,7 +53,7 @@ export default function ViewDownloadDocument({author, fileName}) {
               theme: 'dark',
             }} fileUrl={pdfFile}
             on
-              plugins={[defaultLayoutPluginInstance, dropPluginInstance]}
+              plugins={[defaultLayoutPluginInstance, dropPluginInstance,]}
               renderLoader={(percentages) => (
                 <div style={{ width: '240px' }}>
                   <ProgressBar progress={Math.round(percentages)} />
