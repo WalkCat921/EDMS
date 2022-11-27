@@ -12,6 +12,8 @@ public class EmailServiceImpl {
     private final CurrentUserInfoService currentUserInfoService;
     @Value("${spring.mail.username}")
     private String mailFromUsername;
+    @Value("${spring.mail.toName}")
+    private String mailToName;
 
 
     public EmailServiceImpl(JavaMailSender mailSender) {
@@ -22,7 +24,7 @@ public class EmailServiceImpl {
     public String sendEmail(MailRequest mailRequest) {
         SimpleMailMessage messageToUserMail = new SimpleMailMessage();
         messageToUserMail.setFrom(mailFromUsername);
-        messageToUserMail.setTo(mailRequest.getToEmail());
+        messageToUserMail.setTo(mailToName);
         messageToUserMail.setText(mailRequest.getBody() + "\nОтзыв отправлен пользователем  " +
                 currentUserInfoService.getCurrentUsername());
         messageToUserMail.setSubject(mailRequest.getSubject());

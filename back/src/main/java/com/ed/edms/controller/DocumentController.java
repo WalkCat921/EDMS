@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 @RestController
 @RequestMapping("/api/doc")
 @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 public class DocumentController {
 
     private final DocumentService documentService;
@@ -41,7 +42,7 @@ public class DocumentController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteDocumentFromUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteDocumentFromUser(@PathVariable Long id) throws IOException {
         return new ResponseEntity<>(documentService.deleteOneDocument(id), HttpStatus.OK);
     }
 
@@ -56,6 +57,7 @@ public class DocumentController {
     }
 
     @GetMapping("/all/docs")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllDocuments() {
         return new ResponseEntity<>(documentService.getAllDocuments(), HttpStatus.OK);
     }

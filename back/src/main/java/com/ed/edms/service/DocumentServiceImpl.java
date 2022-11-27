@@ -2,6 +2,7 @@ package com.ed.edms.service;
 
 import com.ed.edms.entity.Document;
 import com.ed.edms.entity.User;
+import com.ed.edms.pojo.MessageResponse;
 import com.ed.edms.repository.DocumentRepository;
 import com.ed.edms.repository.UserRepository;
 import org.springframework.core.io.Resource;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -44,11 +46,6 @@ public class DocumentServiceImpl implements DocumentService {
         Path filePath = Paths.get(fileDirectory +
                 currentUserInfoService.getCurrentUsername(), fileName);
         Files.write(filePath, file.getBytes());
-//        try (Stream<Path> files = Files.list(Paths.get(fileDirectory +
-//                currentUserInfoService.getCurrentUsername()))) {
-//            long count = files.count();
-//            System.out.println(count);
-//        }
 //        return "File uploaded " + file.getOriginalFilename();
     }
 
@@ -77,18 +74,25 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document deleteOneDocument(Long id) {
+    public MessageResponse deleteOneDocument(Long id) throws IOException {
         Optional<Document> document = documentRepository.findById(id);
-        Optional<User> user = userRepository.findByUsername(document.get().getAuthor());
-        User userTemp = user.get();
-        if (document.isPresent()) {
-                    Set<Document> documents = user.get().getDocuments();
-                    documents.remove(document);
-                    userTemp.setDocuments(documents);
-                    userRepository.save(userTemp);
-            return document.get();
+        User author = userRepository.findByUsername(document.get().getAuthor()).get();
+        User currentUser = userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get();
+        if (currentUser.getUsername().equals(author.getUsername())
+                || currentUser.getRoles().contains("ROLE_ADMIN")) {
+            Set <User> users = document.get().getUsers();
+            ArrayList<String> userNames = new ArrayList<>();
+            users.forEach(user -> userNames.add(user.getUsername()));
+            userNames.forEach(userName -> {
+                User user = userRepository.findByUsername(userName).get();
+                user.getDocuments().remove(document.get());
+                userRepository.save(user);
+            });
+            Files.delete(Path.of(Paths.get(fileDirectory +
+                    author.getUsername()) + "\\" + document.get().getName()));
+            return new MessageResponse("Документ удален");
         } else {
-            return null;
+            return new MessageResponse("Нет доступа");
         }
     }
 
@@ -96,7 +100,7 @@ public class DocumentServiceImpl implements DocumentService {
     public User sendOneDocument(Long userId, Long documentId) {
         Document document = documentRepository.findById(documentId).get();
         User user = userRepository.findById(userId).get();
-        Set <Document> documents = user.getDocuments();
+        Set<Document> documents = user.getDocuments();
         documents.add(document);
         user.setDocuments(documents);
         return userRepository.save(user);

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/mail")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@PreAuthorize("hasRole('ROLE_USER')")
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 public class MailController {
     private final EmailServiceImpl emailService;
 
