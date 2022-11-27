@@ -24,7 +24,7 @@ public interface DocumentService {
 
     Document deleteOneDocument(Long id);
 
-    Document sendOneDocument(Long userId, Long documentId);
+    User sendOneDocument(Long userId, Long documentId);
 
     Set<Document> getAllUserDocuments();
 

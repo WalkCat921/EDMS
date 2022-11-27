@@ -60,6 +60,7 @@ public class User {
     private Set<User> subscribers = new HashSet<>();
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "user_subscriptions",
             joinColumns = {@JoinColumn(name = "subscriber_id")},

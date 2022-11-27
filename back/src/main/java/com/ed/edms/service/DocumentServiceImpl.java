@@ -79,8 +79,13 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public Document deleteOneDocument(Long id) {
         Optional<Document> document = documentRepository.findById(id);
+        Optional<User> user = userRepository.findByUsername(document.get().getAuthor());
+        User userTemp = user.get();
         if (document.isPresent()) {
-            documentRepository.deleteById(id);
+                    Set<Document> documents = user.get().getDocuments();
+                    documents.remove(document);
+                    userTemp.setDocuments(documents);
+                    userRepository.save(userTemp);
             return document.get();
         } else {
             return null;
@@ -88,18 +93,13 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document sendOneDocument(Long userId, Long documentId) {
+    public User sendOneDocument(Long userId, Long documentId) {
         Document document = documentRepository.findById(documentId).get();
-        document.getUsers()
-                .add(userRepository.
-                        findByUsername(currentUserInfoService
-                                .getCurrentUsername()).get());
-        return documentRepository.save(document);
-
-//        Optional<User> user = userRepository.findById(id);
-//        if (user.isPresent()) {
-//            currentUserInfoService.getCurrentUsername();
-//        }
+        User user = userRepository.findById(userId).get();
+        Set <Document> documents = user.getDocuments();
+        documents.add(document);
+        user.setDocuments(documents);
+        return userRepository.save(user);
     }
 
     @Override

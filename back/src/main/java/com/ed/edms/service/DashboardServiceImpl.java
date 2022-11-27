@@ -2,12 +2,15 @@ package com.ed.edms.service;
 
 import com.ed.edms.entity.Document;
 import com.ed.edms.entity.User;
+import com.ed.edms.pojo.DocumentsForCountAnalyse;
 import com.ed.edms.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class DashboardServiceImpl implements DashboardService {
@@ -37,21 +40,49 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public Map<String, Integer> getUserDocumentsCount() {
+    public ArrayList<DocumentsForCountAnalyse> getUserDocumentsCount() {
         List<User> userList = userRepository.findAll();
         Map<String, Integer> documentsCount = new HashMap<>();
+        ArrayList<DocumentsForCountAnalyse> documentsForCountAnalyses = new ArrayList<>();
+        int allDocsCount = 0;
         for (User user : userList) {
             if (user.getDocuments() != null) {
                 documentsCount.put(user.getUsername(), user.getDocuments().size());
+                allDocsCount += user.getDocuments().size();
             } else {
                 documentsCount.put(user.getUsername(), 0);
             }
         }
-        return documentsCount;
+        final Float all = (float) allDocsCount;
+        if (documentsCount.size() > 5) {
+            List<Map.Entry<String, Integer>> list = documentsCount.entrySet().stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                    .limit(5)
+                    .collect(Collectors.toList());
+            list
+                    .forEach(document -> {
+                        Float percent = document.getValue() / all * 100;
+                        documentsForCountAnalyses
+                                .add(new DocumentsForCountAnalyse(
+                                        document.getKey(), document.getValue(), percent));
+                    });
+        } else {
+            documentsCount.entrySet().stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                    .collect(Collectors.toList())
+                    .forEach(document -> {
+                                Float percent = document.getValue() / all * 100;
+                                documentsForCountAnalyses
+                                        .add(new DocumentsForCountAnalyse(
+                                                document.getKey(), document.getValue(), percent));
+                            }
+                    );
+        }
+        return documentsForCountAnalyses;
     }
 
     @Override
-    public Map<String, Integer> getUserSubscribersCount() {
+    public List<Map.Entry<String, Integer>> getUserSubscribersCount() {
         List<User> userList = userRepository.findAll();
         Map<String, Integer> subscribersCount = new HashMap<>();
         for (User user : userList) {
@@ -61,7 +92,10 @@ public class DashboardServiceImpl implements DashboardService {
                 subscribersCount.put(user.getUsername(), 0);
             }
         }
-        return subscribersCount;
+        return subscribersCount.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .limit(5)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,12 +105,15 @@ public class DashboardServiceImpl implements DashboardService {
         for (User user : userList) {
             if (user.getDocuments() != null) {
                 float userDocsSize = 0;
-                for (Document document : user.getDocuments()){
+                for (Document document : user.getDocuments()) {
                     userDocsSize += document.getSize();
                 }
                 documentsCount.put(user.getUsername(), userDocsSize);
             } else {
                 documentsCount.put(user.getUsername(), 0f);
+            }
+            if (documentsCount.size() == 5) {
+                return documentsCount;
             }
         }
         return documentsCount;

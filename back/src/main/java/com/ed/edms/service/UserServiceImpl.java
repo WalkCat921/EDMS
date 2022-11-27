@@ -72,6 +72,14 @@ public class UserServiceImpl implements UserService {
         if (user.isPresent()) {
             if (user.get().getPerson() == null){
                 user.get().setPerson(person);
+            } else {
+                Person personToUpdate = personRepository.findById(
+                        user.get().getPerson().getId()).get();
+                personToUpdate.setAddress(person.getAddress());
+                personToUpdate.setFirstName(person.getFirstName());
+                personToUpdate.setPhoneNumber(personToUpdate.getPhoneNumber());
+                personToUpdate.setSecondName(person.getSecondName());
+                user.get().setPerson(personToUpdate);
             }
             return userRepository.save(user.get());
         }
