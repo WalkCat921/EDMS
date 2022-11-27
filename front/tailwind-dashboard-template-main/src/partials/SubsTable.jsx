@@ -8,19 +8,17 @@ import { render } from 'react-dom';
 import '../css/index.css'
 
 
-function SubsTanle({documentUserId}) {
+function SubsTanle({documentUserId, author}) {
 
-  const [documentList, setDocumentList] = useState([])
+  const [subsList, setSubsist] = useState([])
   const [document, setDosument] = useState({})
 
   const loadSubscribers = async () => {
     let resultList = await axios.get("http://localhost:8080/api/user/sub/subscribers")
-    setDocumentList(resultList.data)
+    setSubsist(resultList.data)
   }
 
   const shareDocument = async (userId, documentId) => {
-    alert(userId+' id usera')
-    alert(documentId+' id doca')
     await axios.post(`http://localhost:8080/api/doc/send/${userId}/${documentId}`).then((resposne)=>{
         alert("+")
     })
@@ -39,7 +37,7 @@ function SubsTanle({documentUserId}) {
         { title: 'Ипя пользователя', field: 'username' },
         { title: 'Email', field: 'email' }
       ]}
-      data={documentList}
+      data={subsList.filter(sub=>sub.username!==author)}
       options={{
         selection: true
       }}
@@ -53,15 +51,6 @@ function SubsTanle({documentUserId}) {
           })
         })
       ]}
-    //   detailPanel={[
-    //     {
-    //       icon: 'share',
-    //       tooltip: 'Поделится',
-    //       render: rowData => {
-            
-    //       },
-    //     },
-    //   ]}
       localization={{
         body: {
           emptyDataSourceMessage: 'Данных нет'
