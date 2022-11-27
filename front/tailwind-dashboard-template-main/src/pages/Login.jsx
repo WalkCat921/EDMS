@@ -11,7 +11,6 @@ export default function LoginUser() {
             isValid
         },
         handleSubmit,
-        reset,
     } = useForm({
         mode: "onBlur"
     })
@@ -24,18 +23,25 @@ export default function LoginUser() {
     })
 
     const { password, username } = user
-
+    const [errorResponse, setErrorResponse] = useState('')
     const onInputChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value })
     }
 
     const onSubmit = async (e) => {
-        // e.preventDefault();
         await axios.post(`http://localhost:8080/api/auth/signin`, user)
             .then(response => {
                 let userInfo = JSON.stringify(response.data);
                 localStorage.setItem('userInfo', userInfo);
                 navigate("/main")
+            }).catch(error => {
+                switch (error.response.status) {
+                    case 401:
+                        setErrorResponse('Неверно введены логин/пароль')
+                        break;
+                    default:
+                        break;
+                }
             })
     }
 
@@ -54,25 +60,30 @@ export default function LoginUser() {
                         Вход в аккаунт
                     </h2>
                 </div>
+                <div>
+                    {errorResponse && <div className="p-2 mt-2 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                        {errorResponse}
+                    </div>}
+                </div>
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <input type="hidden" name="remember" value="True" />
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>
                             <label htmlFor="username" className="sr-only">Имя пользователя</label>
-                            <input 
-                            id="username" 
-                            name="username" 
-                            type="text" 
-                            autoComplete="text"
-                            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Имя пользователя" 
-                           {...register('username', {
-                                required: "Имя пользователя обязательное поле",
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                autoComplete="text"
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Имя пользователя"
+                                {...register('username', {
+                                    required: "Имя пользователя обязательное поле",
 
-                            })} 
-                            value={username}
-                            onChange={(e) => onInputChange(e)} 
+                                })}
+                                value={username}
+                                onChange={(e) => onInputChange(e)}
                             />
-                            
+
                         </div>
                         <div>
                             <label htmlFor="password" className="sr-only">Пароль</label>
@@ -114,7 +125,7 @@ export default function LoginUser() {
                     <div>
                         <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                                 </svg>
                             </span>

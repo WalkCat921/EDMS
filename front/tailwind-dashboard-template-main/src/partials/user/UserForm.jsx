@@ -41,7 +41,7 @@ export default function UserForm() {
         formState: {
             errors,
         },
-        control,
+        // control,
         handleSubmit
     } = useForm({
         mode:'onBlur'
@@ -50,7 +50,7 @@ export default function UserForm() {
         getUser()
     }, []);
 
-
+    
     
 
     const handleEditButton = () => {
@@ -79,7 +79,7 @@ export default function UserForm() {
     }
 
     const onSubmit = () => {
-        if(errors){alert(JSON.stringify(errors))}else {
+        if(errors){alert(JSON.stringify(errors))} else {
             alert('false')
         }
         setIsFieldAvaible(!isFieldAvaible)
@@ -469,7 +469,7 @@ export default function UserForm() {
                     </div>
                 </div>
             </form>
-            <DevTool control={control} />
+            {/* <DevTool control={control} /> */}
         </div>
     </>
     )

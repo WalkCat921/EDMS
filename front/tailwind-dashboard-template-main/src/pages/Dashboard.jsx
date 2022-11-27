@@ -4,8 +4,6 @@ import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import { Navigate } from 'react-router-dom';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
-import FilterButton from '../partials/actions/FilterButton';
-// import Datepicker from '../partials/actions/Datepicker';
 import { Route, useLocation } from 'react-router-dom';
 import DashboardCard01 from '../partials/dashboard/DashboardCard01';
 import DashboardCard02 from '../partials/dashboard/DashboardCard02';
@@ -33,6 +31,7 @@ import Subscribers from './SubscriberPage';
 import FAQ from './FAQ';
 import Support from './Suppport';
 import AuthTokenResponse from '../utils/AuthTokenResponse'
+import OnlyAdminRoute from '../utils/OnlyAdminRoute';
 
 
 
@@ -55,17 +54,17 @@ function Dashboard() {
     <DashboardCard12 />
     <DashboardCard13 />
   </>]
-  const allUsersForAdmin = [<><AllUsersForAdmin/></>]
-  const allUsersTable = [<><AllUsersTable/></>]
+  const allUsersForAdmin = [<><AllUsersForAdmin /></>]
+  const allUsersTable = [<><AllUsersTable /></>]
   const userForm = [<><UserForm /></>]
   const docViewer = [<><DocumentView /></>]
   const addDocument = [<><AddDocument /></>]
-  const allDocuments = [<><AllDocumentsTable/></>]
-  const userDocuments = [<><UserDocuments/></>]
-  const userSubscriptions = [<><Subscriptions/></>]
-  const userSubscribers = [<><Subscribers/></>]
-  const helpFAQ = [<><FAQ/></>]
-  const helpSupport = [<><Support/></>]
+  const allDocuments = [<><AllDocumentsTable /></>]
+  const userDocuments = [<><UserDocuments /></>]
+  const userSubscriptions = [<><Subscriptions /></>]
+  const userSubscribers = [<><Subscribers /></>]
+  const helpFAQ = [<><FAQ /></>]
+  const helpSupport = [<><Support /></>]
   const location = useLocation();
   const [components, setComponents] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -75,7 +74,7 @@ function Dashboard() {
     if (userInfo?.token) {
       AuthTokenResponse(userInfo.token)
     }
-  })
+  }, [])
 
 
   return (
@@ -98,15 +97,24 @@ function Dashboard() {
                 <Route exact path='/' element={mainDashboardComponents} />
                 <Route exact path="/users" element={allUsersTable} />
                 <Route exact path="/user/profile" element={userForm} />
-                <Route excat path='/user/documents' element={userDocuments}/>
-                <Route excat path='/user/subscriptions' element={userSubscriptions}/>
-                <Route excat path='user/subscribers' element={userSubscribers}/>
+                <Route excat path='/user/documents' element={userDocuments} />
+                <Route excat path='/user/subscriptions' element={userSubscriptions} />
+                <Route excat path='user/subscribers' element={userSubscribers} />
                 <Route excat path='/document' element={docViewer} />
                 <Route excat path='/document/add' element={addDocument} />
-                <Route excat path='/admin/documents' element={allDocuments}/>
-                <Route excat path='/admin/users' element={allUsersForAdmin}/>
-                <Route excat path='/help/faq' element={helpFAQ}/>
-                <Route excat path='/help/support' element={helpSupport}/>
+                <Route excat path='/admin/documents' element={
+                  <OnlyAdminRoute>
+                    {allDocuments}
+                  </OnlyAdminRoute>
+                } />
+                <Route excat path='/admin/users' element={
+
+                  <OnlyAdminRoute>
+                    {allUsersForAdmin}
+                  </OnlyAdminRoute>
+                } />
+                <Route excat path='/help/faq' element={helpFAQ} />
+                <Route excat path='/help/support' element={helpSupport} />
               </Routes>
             </div>
           </div>
