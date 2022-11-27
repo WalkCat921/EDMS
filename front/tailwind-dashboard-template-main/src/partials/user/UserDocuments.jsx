@@ -20,36 +20,50 @@ function UserDocuments() {
     setDocumentList(resultList.data)
   }
 
+  const checkDoc = {
+    tooltip: 'Просмотреть',
+    render: rowData => {
+      const author = rowData.author;
+      const fileName = rowData.name;
+      return(<ViewDownloadDocument author={author} fileName={fileName}/>)
+    },
+  }
+   const shareDoc = {
+      icon: 'share',
+      tooltip: 'Поделится',
+      render: rowData => {
+        return(<SubsTable documentUserId={rowData.id}/>)
+      },
+   } 
+
 
   useEffect(() => {
     loadDocuments();
   }, []);
 
   const deleteDocument = async (id) => {
-    axios.delete(`http://localhost:8080/api/doc/delete/${id}`).then(() => { loadDocuments() })
+    axios.delete(`http://localhost:8080/api/doc/delete/${id}`).then(() => { loadDocuments() }).catch((err)=>{
+      alert(err)
+    })
   }
 
-
-const formatDate = (dateString) => {
-  const options = { year: "numeric", month: "long", day: "numeric"}
-  return new Date(dateString).toLocaleDateString(undefined, options)
-}
   return (<>
     <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
       <MaterialTable
       title="Документы"
       columns={[
         { title: 'Название', field: 'name' },
+        { title: 'Автор', field:'author'},
         { title: 'Тип', field: 'type' },
         { title: 'Размер (KB)', field:'size'},
         { title: 'Дата загрузки', field:'creationDate', type: 'datetime' }
       ]}
       data={documentList}
       actions={[
-        rowData => ({
-          icon: 'delete',
-          tooltip: 'Удалить',
-          onClick: (event, rowData) => deleteDocument(rowData.id)
+        rowData => (JSON.parse(localStorage.getItem('userInfo')).username===rowData.author&&{
+          icon:'delete',
+          tooltip:'Удалить',
+          onClick:(event, rowData)=>deleteDocument(rowData.id)
         })
       ]}
       detailPanel={[
@@ -65,7 +79,7 @@ const formatDate = (dateString) => {
           icon: 'share',
           tooltip: 'Поделится',
           render: rowData => {
-            return(<SubsTable documentUserId={rowData.id}/>)
+            return(<SubsTable author={rowData.author} documentUserId={rowData.id}/>)
           },
         },
       ]}

@@ -32,19 +32,19 @@ import FAQ from './FAQ';
 import Support from './Suppport';
 import AuthTokenResponse from '../utils/AuthTokenResponse'
 import OnlyAdminRoute from '../utils/OnlyAdminRoute';
+import axios from 'axios';
+import Dash from '../partials/dashboard/Dash';
 
 
 
 function Dashboard() {
-
-
   const mainDashboardComponents = [<>
-    <DashboardCard01 />
-    <DashboardCard02 />
-    <DashboardCard03 />
-    <DashboardCard04 />
-    <DashboardCard05 />
-    <DashboardCard06 />
+    {/* <DashboardCard01 /> */}
+    {/* <DashboardCard02 /> */}
+    {/* <DashboardCard03 /> */}
+    {/* <DashboardCard04 /> */}
+    {/* <DashboardCard05 /> */}
+    <DashboardCard06/>
     <DashboardCard07 />
     <DashboardCard08 />
     <DashboardCard09 />
@@ -94,6 +94,7 @@ function Dashboard() {
             {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
               <Routes>
+
                 <Route exact path='/' element={mainDashboardComponents} />
                 <Route exact path="/users" element={allUsersTable} />
                 <Route exact path="/user/profile" element={userForm} />
@@ -115,6 +116,7 @@ function Dashboard() {
                 } />
                 <Route excat path='/help/faq' element={helpFAQ} />
                 <Route excat path='/help/support' element={helpSupport} />
+                <Route excat path='/test' element={<Dash/>}/>
               </Routes>
             </div>
           </div>
