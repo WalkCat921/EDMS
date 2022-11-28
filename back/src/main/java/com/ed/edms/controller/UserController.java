@@ -40,9 +40,9 @@ public class UserController {
         return new ResponseEntity<>(userService.getOne(id), HttpStatus.OK);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody User user) {
-        return new ResponseEntity<>(userService.updateOneUser(id, user), HttpStatus.OK);
+    @PutMapping("/edit")
+    public ResponseEntity<?> updateUserById(@RequestBody User user) {
+        return new ResponseEntity<>(userService.updateOneUser(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

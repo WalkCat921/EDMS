@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 // TODO errorHandling
-// TODO editable userInfo
 
 public interface DocumentService {
     Resource downloadDocument(String filename, String author) throws MalformedURLException;

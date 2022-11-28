@@ -29,11 +29,13 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthEntryPointJwt unauthorizedHandler;
 
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -65,30 +67,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**").permitAll()
-                .antMatchers("/api/logout/**").permitAll()
-                .antMatchers("/api/users/**").permitAll()
-                .antMatchers("/api/user/**").permitAll()
-                .antMatchers("/api/doc/**").permitAll()
-                .antMatchers("/api/mail/**").permitAll()
-                .antMatchers("/api/dashboard/**").permitAll()
-                .anyRequest().authenticated()
-                .and().logout().logoutUrl("/logout").permitAll();
+                .anyRequest().authenticated();
 
         http
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-
-//		http
-//		.authorizeRequests(authorizeRequests ->
-//				authorizeRequests
-//					.antMatchers("/board/*").hasAnyRole("MANAGER", "OPERATOR")
-//					.antMatchers("/members/*").hasRole("MANAGER")
-//					.antMatchers("/").permitAll())
-//		.httpBasic().realmName("org team")
-//		.and()
-//		.sessionManagement()
-//		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-
-
 }

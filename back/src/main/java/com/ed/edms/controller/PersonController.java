@@ -30,8 +30,8 @@ public class PersonController {
         return new ResponseEntity<>(userService.getUserPersonDetails(id), HttpStatus.OK);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody Person person) {
-        return new ResponseEntity<>(userService.updateUserDetails(id, person), HttpStatus.OK);
+    @PutMapping("/edit")
+    public ResponseEntity<?> updateUserById(@RequestBody Person person) {
+        return new ResponseEntity<>(userService.updateUserDetails(person), HttpStatus.OK);
     }
 }
