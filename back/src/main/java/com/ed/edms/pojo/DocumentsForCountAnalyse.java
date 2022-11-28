@@ -1,25 +1,25 @@
 package com.ed.edms.pojo;
 
 public class DocumentsForCountAnalyse {
-    private String mame;
+    private String username;
     private Integer countOfDocuments;
     private Float percentFromAll;
 
     public DocumentsForCountAnalyse() {
     }
 
-    public DocumentsForCountAnalyse(String mame, Integer countOfDocuments, Float percentFromAll) {
-        this.mame = mame;
+    public DocumentsForCountAnalyse(String name, Integer countOfDocuments, Float percentFromAll) {
+        this.username = name;
         this.countOfDocuments = countOfDocuments;
         this.percentFromAll = percentFromAll;
     }
 
-    public String getMame() {
-        return mame;
+    public String getUsername() {
+        return username;
     }
 
-    public void setMame(String mame) {
-        this.mame = mame;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Integer getCountOfDocuments() {

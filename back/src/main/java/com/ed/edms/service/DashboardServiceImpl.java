@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Service
 public class DashboardServiceImpl implements DashboardService {
-    final
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public DashboardServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -82,9 +82,9 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public List<Map.Entry<String, Integer>> getUserSubscribersCount() {
+    public Map<String, Integer> getUserSubscribersCount() {
         List<User> userList = userRepository.findAll();
-        Map<String, Integer> subscribersCount = new HashMap<>();
+        Map<String, Integer> subscribersCount = new TreeMap<>();
         for (User user : userList) {
             if (user.getSubscribers() != null) {
                 subscribersCount.put(user.getUsername(), user.getSubscribers().size());
@@ -92,10 +92,7 @@ public class DashboardServiceImpl implements DashboardService {
                 subscribersCount.put(user.getUsername(), 0);
             }
         }
-        return subscribersCount.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .limit(5)
-                .collect(Collectors.toList());
+        return subscribersCount;
     }
 
     @Override
@@ -108,9 +105,9 @@ public class DashboardServiceImpl implements DashboardService {
                 for (Document document : user.getDocuments()) {
                     userDocsSize += document.getSize();
                 }
-                documentsCount.put(user.getUsername(), userDocsSize);
-            } else {
-                documentsCount.put(user.getUsername(), 0f);
+                if (userDocsSize != 0) {
+                    documentsCount.put(user.getUsername(), userDocsSize);
+                }
             }
             if (documentsCount.size() == 5) {
                 return documentsCount;

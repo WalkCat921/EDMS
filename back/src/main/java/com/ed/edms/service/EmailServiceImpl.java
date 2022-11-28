@@ -25,7 +25,7 @@ public class EmailServiceImpl {
         SimpleMailMessage messageToUserMail = new SimpleMailMessage();
         messageToUserMail.setFrom(mailFromUsername);
         messageToUserMail.setTo(mailToName);
-        messageToUserMail.setText(mailRequest.getBody() + "\nОтзыв отправлен пользователем  " +
+        messageToUserMail.setText(mailRequest.getBody() + "\nСообщение отправлено пользователем  " +
                 currentUserInfoService.getCurrentUsername());
         messageToUserMail.setSubject(mailRequest.getSubject());
 
