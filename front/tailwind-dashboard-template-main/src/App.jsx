@@ -7,8 +7,6 @@ import {
 } from 'react-router-dom';
 import './css/style.css';
 import './charts/ChartjsConfig';
-
-// Import pages
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
@@ -17,7 +15,6 @@ import PrivateRoute from './utils/PrivateRoute';
 import UserLogged from './utils/UserLogged';
 
 function App() {
-  
   return (
     <>
       <Routes>

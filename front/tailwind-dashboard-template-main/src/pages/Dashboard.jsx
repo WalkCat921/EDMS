@@ -32,8 +32,6 @@ import FAQ from './FAQ';
 import Support from './Suppport';
 import AuthTokenResponse from '../utils/AuthTokenResponse'
 import OnlyAdminRoute from '../utils/OnlyAdminRoute';
-import axios from 'axios';
-import Dash from '../partials/dashboard/Dash';
 
 
 
@@ -116,7 +114,6 @@ function Dashboard() {
                 } />
                 <Route excat path='/help/faq' element={helpFAQ} />
                 <Route excat path='/help/support' element={helpSupport} />
-                <Route excat path='/test' element={<Dash/>}/>
               </Routes>
             </div>
           </div>

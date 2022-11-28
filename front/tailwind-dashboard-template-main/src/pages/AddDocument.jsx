@@ -9,7 +9,6 @@ import { dropPlugin } from '@react-pdf-viewer/drop';
 import { Button, Tooltip } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import '../css/index.css'
 
 function AddDocument() {
@@ -47,22 +46,24 @@ function AddDocument() {
     setDocumentName(e.target.value)
   }
 
-  const uploadFile = async (file,fileName) =>{
-    await axios.post("http://localhost:8080/api/doc/add", file,{
-      params:{fileName}
-    }).then(response=>{
+  const uploadFile = async (file, fileName) => {
+    await axios.post("http://localhost:8080/api/doc/add", file, {
+      params: { fileName }
+    }).then(response => {
       navigate("/main/user/documents")
+    }).catch(e => {
+      alert(e)
     })
   }
   const allowedFiles = ['application/pdf'];
   const handleFile = (e) => {
-    let selectedFile=e.target.files[0]
+    let selectedFile = e.target.files[0]
     if (selectedFile) {
       if (selectedFile && allowedFiles.includes(selectedFile.type)) {
         let reader = new FileReader();
         let file = new FormData();
         setDocumentName(selectedFile.name)
-        file.append('file',selectedFile)
+        file.append('file', selectedFile)
         setFileForm(file)
         reader.readAsDataURL(selectedFile);
         reader.onloadend = (e) => {
@@ -102,7 +103,7 @@ function AddDocument() {
               onChange={(e) => handleDocNameChange(e)} value={documentName} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Введите название документа" />
           </div>
           {<Tooltip title='Принять'>
-            <Button type="submit" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-6 mr-4" onClick={() =>uploadFile(fileForm,documentName)}>
+            <Button type="submit" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-6 mr-4" onClick={() => uploadFile(fileForm, documentName)}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.9" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
@@ -143,7 +144,7 @@ function AddDocument() {
         Просмотр документа
       </label>
       <div className="viewer">
-        {pdfFile && (
+        {pdfFile && (<>
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
             <Viewer theme={{
               theme: 'dark',
@@ -155,9 +156,11 @@ function AddDocument() {
                   <ProgressBar progress={Math.round(percentages)} />
                 </div>
               )}
-            ></Viewer>
+            >
+            </Viewer>
+            
           </Worker>
-        )}
+          </>)}
         {!pdfFile && <>Файл для загрузки не выбран</>}
       </div>
     </div>

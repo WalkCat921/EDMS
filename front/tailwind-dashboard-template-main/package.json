@@ -29,6 +29,7 @@
     "chartjs-adapter-moment": "^1.0.0",
     "datastream-js": "^1.0.7",
     "flatted": "^3.2.7",
+    "formik": "^2.2.9",
     "material-table": "^1.69.2",
     "moment": "^2.29.4",
     "pdfjs-dist": "^3.0.279",
@@ -46,7 +47,8 @@
     "styled-components": "^5.3.6",
     "tw-elements": "^1.0.0-alpha12",
     "universal-cookie": "^4.0.4",
-    "wl-msg-reader": "^0.2.0"
+    "wl-msg-reader": "^0.2.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.2.3",
