@@ -65,7 +65,7 @@ export default function UserForm() {
 
 
     const sendUser = () => {
-        axios.post(`http://localhost:8080/api/users/edit/`, userRequest).then(response => {
+        axios.put(`http://localhost:8080/api/users/edit/`, userRequest).then(response => {
         })
     }
 

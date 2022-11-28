@@ -1,21 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import EditMenu from '../EditMenu';
 import MaterialTable from 'material-table'
-import { useCurrentUser } from '../../utils/useCurrentUser'
-import { Checkbox, Select, MenuItem } from '@material-ui/core'
-import { AddBox, ArrowDownward } from "@material-ui/icons";
 
 
 function AllUsersTable() {
 
   const [userList, setUserList] = useState([])
-  const [errorMessage, setErrorMessage] = useState('')
   const [showModal, setShowModal] = React.useState(false);
   const [userFromList, setUserFromList] = useState({})
-  // const [currentUser, setCurrentUser] = useCurrentUser();
-  // const [filter, setFilter]=useState(true)
 
   const loadUser = async () => {
     let resultList = await axios.get("http://localhost:8080/api/users/all")
@@ -38,7 +30,7 @@ function AllUsersTable() {
     <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
       <div className="p-5">
         <MaterialTable
-          title="Пользователи"
+          title="Все пользователи"
           columns={[
             { title: 'Имя пользователя', field: 'username' },
             { title: 'Email', field: 'email' },
@@ -58,8 +50,31 @@ function AllUsersTable() {
             }
           ]}
           options={{
-            actionsColumnIndex: -1,
-            exportButton: true,
+            actionsColumnIndex: -1
+          }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: 'Данных нет'
+            },
+            header:{
+              actions: 'Управление'
+            },
+            toolbar: {
+              searchTooltip: 'Поиск',
+              exportPDFName:'Экспорт PDF',
+              searchAriaLabel:'Поиск',
+              searchPlaceholder:'Поиск...',
+              exportCSVName:'Экспорт CSV',
+              exportTitle: 'Экспорт'
+            },
+            pagination: {
+              labelRowsSelect: 'записей',
+              labelDisplayedRows: ' {from}-{to} записей {count}',
+              firstTooltip: 'Начало',
+              previousTooltip: 'Назад',
+              nextTooltip: 'Далее',
+              lastTooltip: 'В конце'
+            }
           }}
 
         />

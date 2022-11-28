@@ -1,10 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table'
-import { Checkbox, Select, MenuItem } from '@material-ui/core'
-import { AddBox, ArrowDownward } from "@material-ui/icons";
-import { render } from 'react-dom';
 import ViewDownloadDocument from './ViewDownloadDocument';
 import '../css/index.css'
 
@@ -12,31 +8,27 @@ import '../css/index.css'
 function AllDocumentsTable() {
 
   const [documentList, setDocumentList] = useState([])
-  const [document, setDosument] = useState({})
 
   const loadDocuments = async () => {
-    let resultList = await axios.get("http://localhost:8080/api/doc/all/docs")
-    setDocumentList(resultList.data)
+    await axios.get("http://localhost:8080/api/doc/all/docs").then(response=>{
+      setDocumentList(response.data)
+    })
   }
-
 
   useEffect(() => {
     loadDocuments();
   }, []);
 
   const deleteDocument = async (id) => {
-    axios.delete(`http://localhost:8080/api/doc/delete/${id}`).then(() => { loadDocuments() })
+    axios.delete(`http://localhost:8080/api/doc/delete/${id}`)
+    loadDocuments()
   }
 
 
-const formatDate = (dateString) => {
-  const options = { year: "numeric", month: "long", day: "numeric"}
-  return new Date(dateString).toLocaleDateString(undefined, options)
-}
   return (<>
     <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
       <MaterialTable
-      title="Документы"
+      title="Все документы"
       columns={[
         { title: 'Название', field: 'name' },
         { title: 'Автор', field:'author' },
@@ -47,12 +39,14 @@ const formatDate = (dateString) => {
       data={documentList}
       actions={[
         rowData => ({
-          // hidden: JSON.parse(localStorage.getItem('userInfo')).roles.map(role => role === 'ROLE_USER' ? false : true),
           icon: 'delete',
           tooltip: 'Удалить',
           onClick: (event, rowData) => deleteDocument(rowData.id)
         })
       ]}
+      options={{
+        exportButton: true,
+      }}
       detailPanel={[
         {
           tooltip: 'Просмотреть',
@@ -67,8 +61,16 @@ const formatDate = (dateString) => {
         body: {
           emptyDataSourceMessage: 'Данных нет'
         },
+        header:{
+          actions: 'Управление'
+        },
         toolbar: {
-          searchTooltip: 'Поиск'
+          searchTooltip: 'Поиск',
+          exportPDFName:'Экспорт PDF',
+          searchAriaLabel:'Поиск',
+          searchPlaceholder:'Поиск...',
+          exportCSVName:'Экспорт CSV',
+          exportTitle: 'Экспорт'
         },
         pagination: {
           labelRowsSelect: 'записей',

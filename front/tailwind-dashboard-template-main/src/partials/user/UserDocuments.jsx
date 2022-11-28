@@ -1,10 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table'
-import { Checkbox, Select, MenuItem } from '@material-ui/core'
-import { AddBox, ArrowDownward } from "@material-ui/icons";
-import { render } from 'react-dom';
 import ViewDownloadDocument from '../../pages/ViewDownloadDocument';
 import '../../css/index.css'
 import SubsTable from '../SubsTable';
@@ -13,44 +9,26 @@ import SubsTable from '../SubsTable';
 function UserDocuments() {
 
   const [documentList, setDocumentList] = useState([])
-  const [document, setDosument] = useState({})
 
   const loadDocuments = async () => {
-    let resultList = await axios.get("http://localhost:8080/api/doc/mydocs")
-    setDocumentList(resultList.data)
+    await axios.get("http://localhost:8080/api/doc/mydocs").then(response=>{
+      setDocumentList(response.data)
+    })
   }
-
-  const checkDoc = {
-    tooltip: 'Просмотреть',
-    render: rowData => {
-      const author = rowData.author;
-      const fileName = rowData.name;
-      return(<ViewDownloadDocument author={author} fileName={fileName}/>)
-    },
-  }
-   const shareDoc = {
-      icon: 'share',
-      tooltip: 'Поделится',
-      render: rowData => {
-        return(<SubsTable documentUserId={rowData.id}/>)
-      },
-   } 
-
 
   useEffect(() => {
     loadDocuments();
   }, []);
 
   const deleteDocument = async (id) => {
-    axios.delete(`http://localhost:8080/api/doc/delete/${id}`).then(() => { loadDocuments() }).catch((err)=>{
-      alert(err)
-    })
+    axios.delete(`http://localhost:8080/api/doc/delete/${id}`)
+    loadDocuments();
   }
 
   return (<>
     <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
       <MaterialTable
-      title="Документы"
+      title="Мои документы"
       columns={[
         { title: 'Название', field: 'name' },
         { title: 'Автор', field:'author'},
@@ -66,6 +44,9 @@ function UserDocuments() {
           onClick:(event, rowData)=>deleteDocument(rowData.id)
         })
       ]}
+      options={{
+        exportButton: true
+      }}
       detailPanel={[
         {
           tooltip: 'Просмотреть',
@@ -87,8 +68,16 @@ function UserDocuments() {
         body: {
           emptyDataSourceMessage: 'Данных нет'
         },
+        header:{
+          actions: 'Управление'
+        },
         toolbar: {
-          searchTooltip: 'Поиск'
+          searchTooltip: 'Поиск',
+          exportPDFName:'Экспорт PDF',
+          searchAriaLabel:'Поиск',
+          searchPlaceholder:'Поиск...',
+          exportCSVName:'Экспорт CSV',
+          exportTitle: 'Экспорт'
         },
         pagination: {
           labelRowsSelect: 'записей',

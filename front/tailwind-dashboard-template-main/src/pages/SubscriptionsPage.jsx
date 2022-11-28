@@ -1,24 +1,18 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table'
-import {useCurrentUser} from '../utils/useCurrentUser'
-import { Checkbox, Select, MenuItem } from '@material-ui/core'
-import { AddBox, ArrowDownward } from "@material-ui/icons";
 
 
 function Subscriptions() {
 
   const [subsList, setSubsList] = useState([])
-  const [errorMessage, setErrorMessage] = useState('')
   const [showModal, setShowModal] = React.useState(false);
   const [userFromList, setUserFromList] = useState({})
-  // const [currentUser, setCurrentUser] = useCurrentUser();
-  // const [filter, setFilter]=useState(true)
 
   const loadSubs = async () => {
-    let resultList = await axios.get("http://localhost:8080/api/user/sub/subscriptions")
-    setSubsList(resultList.data)
+    await axios.get("http://localhost:8080/api/user/sub/subscriptions").then(response=>{
+      setSubsList(response.data)
+    })
   }
 
   const deleteSubs = async (id) => {
@@ -36,7 +30,7 @@ function Subscriptions() {
     <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
       <div className="p-5">
         <MaterialTable
-          title="Пользователи"
+          title="Подписки"
           columns={[
             { title: 'Имя пользователя', field: 'username' },
             { title: 'Email', field: 'email' },
@@ -86,12 +80,11 @@ function Subscriptions() {
                       </span>
                     </button>
                   </div>
-                  {/*body*/}
                   <div className="relative p-6 flex-auto">
                     <table className="table-fixed w-full">
                       <thead className='border border-slate-200'>
                         <tr>
-                          <th colSpan={2} className='border border-slate-300 text-center'>Пользователи</th>
+                          <th colSpan={2} className='border border-slate-300 text-center'>Пользователь</th>
                         </tr>
                       </thead>
                       <tbody className='border border-slate-300'>
@@ -112,7 +105,7 @@ function Subscriptions() {
                           <td className='border border-slate-300'>{userFromList.roles.map(role => role.name.substr(5).toLowerCase()==='user' ? 'Пользователь' : 'Администратор')}</td>
                         </tr>
                         <tr>
-                          <td colSpan={2} className='border border-slate-300 text-center'>Информация</td>
+                          <th colSpan={2} className='border border-slate-300 text-center'>Информация</th>
                         </tr>
                         <tr>
                           <td className='border border-slate-300'>Фамилия</td>
@@ -125,10 +118,6 @@ function Subscriptions() {
                         <tr>
                           <td className='border border-slate-300'>Телефон</td>
                           <td className='border border-slate-300'>{userFromList.person?.phoneNumber}</td>
-                        </tr>
-                        <tr>
-                          <td className='border border-slate-300'>Дата рождения</td>
-                          <td className='border border-slate-300'>{userFromList.person?.birthdate}</td>
                         </tr>
                         <tr>
                           <td className='border border-slate-300'>Страна</td>
@@ -153,7 +142,6 @@ function Subscriptions() {
                       </tbody>
                     </table>
                   </div>
-                  {/*footer*/}
                   <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                     <button
                       className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
