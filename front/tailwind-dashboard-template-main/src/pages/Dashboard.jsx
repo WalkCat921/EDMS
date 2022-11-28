@@ -72,7 +72,11 @@ function Dashboard() {
             </div>
             <div className="grid grid-cols-12 gap-6">
               <Routes>
-                <Route exact path='/' element={mainDashboardComponents} />
+                <Route exact path='/' element={
+                  <OnlyAdminRoute>
+                    {mainDashboardComponents}
+                  </OnlyAdminRoute>
+                } />
                 <Route exact path="/users" element={allUsersTable} />
                 <Route exact path="/user/profile" element={userForm} />
                 <Route excat path='/user/documents' element={userDocuments} />
