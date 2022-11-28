@@ -4,6 +4,7 @@ import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
 import { Route, useLocation } from 'react-router-dom';
+import DashboardCard01 from '../partials/dashboard/DashboardCard01';
 import DashboardCard06 from '../partials/dashboard/DashboardCard06';
 import DashboardCard07 from '../partials/dashboard/DashboardCard07';
 import DashboardCard10 from '../partials/dashboard/DashboardCard10';
@@ -22,11 +23,14 @@ import Support from './Suppport';
 import AuthTokenResponse from '../utils/AuthTokenResponse'
 import OnlyAdminRoute from '../utils/OnlyAdminRoute';
 import PageNotFound from './PageNotFound'
+import DashboardCard02 from '../partials/dashboard/DashboardCard02';
 
 
 
 function Dashboard() {
   const mainDashboardComponents = [<>
+    <DashboardCard01 />
+    <DashboardCard02 />
     <DashboardCard06 />
     <DashboardCard07 />
     <DashboardCard10 />

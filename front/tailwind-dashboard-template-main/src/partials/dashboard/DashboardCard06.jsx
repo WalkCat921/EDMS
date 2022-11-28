@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import DoughnutChart from '../../charts/DoughnutChart';
 import { Doughnut } from 'react-chartjs-2';
 import {Chart, ArcElement} from 'chart.js'
 Chart.register(ArcElement);
-
 import axios from 'axios';
 
-import { tailwindConfig } from '../../utils/Utils';
-
-function Dash() {
+function DashboardCard06() {
 
   const [statisticCountries, setStatisticCountries] = useState([])
   const [count, setCount] = useState([])
@@ -57,11 +53,9 @@ function Dash() {
       <header className="px-5 py-4 border-b border-slate-100">
         <h2 className="font-semibold text-slate-800">Топ по странам</h2>
       </header>
-      {/* Chart built with Chart.js 3 */}
-      {/* Change the height attribute to adjust the chart height */}
       <Doughnut data={data} />
     </div>
     </>
   );
 }
-export default Dash;
+export default DashboardCard06;
