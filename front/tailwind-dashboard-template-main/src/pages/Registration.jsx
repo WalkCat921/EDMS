@@ -22,6 +22,7 @@ export default function RegistrationUser() {
     let navigate = useNavigate()
 
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [responseError, setResponseError] = useState('')
 
     const [user, setUser] = useState({
         username: "",
@@ -36,8 +37,11 @@ export default function RegistrationUser() {
     }
 
     const onSubmit = async (e) => {
-        await axios.post(`http://localhost:8080/api/auth/signup`, user)
+        await axios.post(`http://localhost:8080/api/auth/signup`, user).then(reponse=>
         navigate("/")
+        ).catch(error=>{
+            setResponseError('Возможно пользователь с таким именем/почтой уже есть!')
+        })
     }
 
     return (
@@ -54,6 +58,11 @@ export default function RegistrationUser() {
                         Регистрация аккаунта
                     </h2>
                 </div>
+                <div>
+                            {responseError && <div class="p-2 mt-2 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                                {responseError}
+                            </div>}
+                        </div>
                 <form class="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <input type="hidden" name="remember" value="True" />
                     <div class="rounded-md shadow-sm -space-y-px">
@@ -67,6 +76,10 @@ export default function RegistrationUser() {
                                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Имя пользователя"
                                 {...register('username', {
                                     required: "Имя пользователя обязательное поле",
+                                    pattern:{
+                                        value:/^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/,
+                                        message:'Имя пользователя некорректно!От 8 до 20 символов.Пробелы должны отсутствовать'
+                                    }
 
                                 })}
                                 value={username}

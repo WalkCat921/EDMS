@@ -21,7 +21,9 @@ function UserDocuments() {
   }, []);
 
   const deleteDocument = async (id) => {
-    axios.delete(`http://localhost:8080/api/doc/delete/${id}`)
+    axios.delete(`http://localhost:8080/api/doc/delete/${id}`).then(response=>{
+      loadDocuments()
+    })
   }
 
   return (<>
@@ -40,7 +42,7 @@ function UserDocuments() {
         rowData => (JSON.parse(localStorage.getItem('userInfo')).username===rowData.author&&{
           icon:'delete',
           tooltip:'Удалить',
-          onClick:(event, rowData)=>{deleteDocument(rowData.id); loadDocuments();}
+          onClick:(event, rowData)=>{deleteDocument(rowData.id)}
         })
       ]}
       options={{

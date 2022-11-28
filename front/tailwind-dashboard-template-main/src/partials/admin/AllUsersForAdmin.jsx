@@ -21,8 +21,10 @@ function AllUsersForAdmin() {
   }, []);
 
   const deleteUser = async (id) => {
-    axios.delete(`http://localhost:8080/api/users/delete/${id}`)
-    loadUser()
+    await axios.delete(`http://localhost:8080/api/users/delete/${id}`).then(response=>{
+      loadUser();
+    })
+    
   }
 
   return (<>
@@ -46,7 +48,7 @@ function AllUsersForAdmin() {
             rowData => ({
               icon: 'delete',
               tooltip: 'Удалить',
-              onClick: (event, rowData) => deleteUser(rowData.id)
+              onClick: (event, rowData) => {deleteUser(rowData.id)}
             })
           ]}
           options={{
