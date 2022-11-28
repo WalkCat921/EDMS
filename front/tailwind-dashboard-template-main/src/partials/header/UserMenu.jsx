@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Transition from '../../utils/Transition';
-
 import UserAvatar from '../../images/user-avatar-32.png';
-import axios from 'axios';
 
 function UserMenu() {
 
@@ -16,7 +14,6 @@ function UserMenu() {
       localStorage.removeItem('userInfo')
   }
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
       if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) return;
@@ -26,7 +23,6 @@ function UserMenu() {
     return () => document.removeEventListener('click', clickHandler);
   });
 
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;

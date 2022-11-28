@@ -26,7 +26,6 @@ function AddDocument() {
     register,
     formState: {
       errors,
-      isValid
     },
     handleSubmit,
     reset,

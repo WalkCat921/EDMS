@@ -1,13 +1,7 @@
 import axios from 'axios'
-
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import InputMask from "react-input-mask";
-import Alert from '@mui/material/Alert';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 
 
 
@@ -28,7 +22,6 @@ export default function RegistrationUser() {
     let navigate = useNavigate()
 
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [errorMessage, setErrorMessage] = useState(null)
 
     const [user, setUser] = useState({
         username: "",

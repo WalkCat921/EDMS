@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import  { ToolbarSlot, TransformToolbarSlot } from '@react-pdf-viewer/toolbar';
-import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer, ProgressBar } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -14,21 +12,11 @@ import '../css/index.css'
 export default function ViewDownloadDocument({author, fileName}) {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const dropPluginInstance = dropPlugin();
-  const toolbarPluginInstance = toolbarPlugin();
-  const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
 
   const [pdfFile, setPdfFile] = useState(null);
 
-  const transform = (slot) => ({
-    ...slot,
-    Download: ()=><></>,
-  })
-
-
-
   useEffect(()=>{
     getFileByName(author,fileName)
-    console.log(pdfFile)
   },[])
 
 
@@ -42,7 +30,7 @@ export default function ViewDownloadDocument({author, fileName}) {
         setPdfFile(e.target.result)
       }
     }).catch((error)=>{
-      alert(error)
+      alert('Ошибка загрузки файла')
     })
   }
   return (

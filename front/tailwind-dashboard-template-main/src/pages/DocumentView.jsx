@@ -1,35 +1,21 @@
 import { useState } from "react";
 import { Worker } from '@react-pdf-viewer/core';
-import  { ToolbarSlot, TransformToolbarSlot } from '@react-pdf-viewer/toolbar';
 import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import { DocumentLoadEvent, Viewer, ProgressBar } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import { toJSON, fromJSON } from 'flatted';
 import { dropPlugin } from '@react-pdf-viewer/drop';
-import { propertiesPlugin } from '@react-pdf-viewer/properties';
-import axios from "axios";
 
 import '../css/index.css'
 
 function DocumentView() {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const dropPluginInstance = dropPlugin();
-  const toolbarPluginInstance = toolbarPlugin();
-  const { renderDefaultToolbar, Toolbar } = toolbarPluginInstance;
 
   const [pdfFile, setPdfFile] = useState(null);
   const [pdfError, setPdfError] = useState('');
   const [isAlertHidden, setIsAlertHidden] = useState(false)
-
-  const handleDocumentLoad = (e) => {
-  };
-
-  const transform = (slot) => ({
-    ...slot,
-    Download: ()=><></>,
-  })
 
   const handleHideAlert = ()=> {
     setIsAlertHidden(!isAlertHidden);
@@ -92,7 +78,7 @@ function DocumentView() {
           <Viewer theme={{
             theme: 'dark',
           }} fileUrl={pdfFile}
-            plugins={[defaultLayoutPluginInstance, dropPluginInstance, toolbarPluginInstance]}
+            plugins={[defaultLayoutPluginInstance, dropPluginInstance]}
             onDocumentLoad={handleDocumentLoad}
             renderLoader={(percentages) => (
               <div style={{ width: '240px' }}>

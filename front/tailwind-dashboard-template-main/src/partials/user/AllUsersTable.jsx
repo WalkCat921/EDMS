@@ -1,21 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import EditMenu from '../EditMenu';
 import MaterialTable from 'material-table'
-import { useCurrentUser } from '../../utils/useCurrentUser'
-import { Checkbox, Select, MenuItem } from '@material-ui/core'
-import { AddBox, ArrowDownward } from "@material-ui/icons";
+import UserAvatar from '../../images/user-avatar-32.png';
 
 
 function AllUsersTable() {
 
   const [userList, setUserList] = useState([])
-  const [errorMessage, setErrorMessage] = useState('')
   const [showModal, setShowModal] = React.useState(false);
   const [userFromList, setUserFromList] = useState({})
-  // const [currentUser, setCurrentUser] = useCurrentUser();
-  // const [filter, setFilter]=useState(true)
+  const [success, setSuccess] = useState(false)
+  const [subUsername, setSubUsername] = useState('')
 
   const loadUser = async () => {
     let resultList = await axios.get("http://localhost:8080/api/users/all")
@@ -25,7 +20,7 @@ function AllUsersTable() {
 
   const subOnUser = async(id)=>{
     await axios.post(`http://localhost:8080/api/user/sub/add/${id}`).then(response=>{
-      console.log('successfull')
+      setSuccess(true)
     })
   }
 
@@ -37,9 +32,16 @@ function AllUsersTable() {
   return (<>
     <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
       <div className="p-5">
+      {success && <div class="bg-green-400 text-center py-4 lg:px-4">
+        <div class="p-2 bg-green-500 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
+          <span class="flex rounded-full bg-green-700 uppercase px-2 py-1 text-xs font-bold mr-3">Успешно!</span>
+          <span class="font-semibold mr-2 text-left flex-auto">Вы подписались на {subUsername}</span>
+        </div>
+      </div>}
         <MaterialTable
-          title="Пользователи"
+          title="Все пользователи"
           columns={[
+            { title: 'Аватар', render:rowData=><img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />},
             { title: 'Имя пользователя', field: 'username' },
             { title: 'Email', field: 'email' },
 
@@ -54,12 +56,35 @@ function AllUsersTable() {
             {
               icon: 'person_add',
               tooltip: 'Подписаться',
-              onClick: (event,rowData) => { subOnUser(rowData.id) }
+              onClick: (event,rowData) => { setSubUsername(rowData.username); subOnUser(rowData.id) }
             }
           ]}
           options={{
-            actionsColumnIndex: -1,
-            exportButton: true,
+            actionsColumnIndex: -1
+          }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: 'Данных нет'
+            },
+            header:{
+              actions: 'Управление'
+            },
+            toolbar: {
+              searchTooltip: 'Поиск',
+              exportPDFName:'Экспорт PDF',
+              searchAriaLabel:'Поиск',
+              searchPlaceholder:'Поиск...',
+              exportCSVName:'Экспорт CSV',
+              exportTitle: 'Экспорт'
+            },
+            pagination: {
+              labelRowsSelect: 'записей',
+              labelDisplayedRows: ' {from}-{to} записей {count}',
+              firstTooltip: 'Начало',
+              previousTooltip: 'Назад',
+              nextTooltip: 'Далее',
+              lastTooltip: 'В конце'
+            }
           }}
 
         />
