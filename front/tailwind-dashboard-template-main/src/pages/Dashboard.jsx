@@ -21,6 +21,7 @@ import FAQ from './FAQ';
 import Support from './Suppport';
 import AuthTokenResponse from '../utils/AuthTokenResponse'
 import OnlyAdminRoute from '../utils/OnlyAdminRoute';
+import PageNotFound from './PageNotFound'
 
 
 
@@ -71,23 +72,23 @@ function Dashboard() {
                 <Route exact path="/users" element={allUsersTable} />
                 <Route exact path="/user/profile" element={userForm} />
                 <Route excat path='/user/documents' element={userDocuments} />
-                <Route excat path='/user/subscriptions' element={userSubscriptions} />
-                <Route excat path='user/subscribers' element={userSubscribers} />
-                <Route excat path='/document' element={docViewer} />
-                <Route excat path='/document/add' element={addDocument} />
-                <Route excat path='/admin/documents' element={
+                <Route excat path='/users/user/subscriptions' element={userSubscriptions} />
+                <Route excat path='/users/user/subscribers' element={userSubscribers} />
+                <Route excat path='/document/pdf' element={docViewer} />
+                <Route excat path='/document/pdf/add' element={addDocument} />
+                <Route excat path='/admin/doc' element={
                   <OnlyAdminRoute>
                     {allDocuments}
                   </OnlyAdminRoute>
                 } />
-                <Route excat path='/admin/users' element={
-
+                <Route excat path='/admin/allUsr' element={
                   <OnlyAdminRoute>
                     {allUsersForAdmin}
                   </OnlyAdminRoute>
                 } />
                 <Route excat path='/help/faq' element={helpFAQ} />
                 <Route excat path='/help/support' element={helpSupport} />
+                <Route excat path='/*' element={<><div className='col-span-12'><PageNotFound/></div></>}/>
               </Routes>
             </div>
           </div>

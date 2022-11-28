@@ -1,17 +1,19 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import MaterialTable from 'material-table'
+import UserAvatar from '../images/user-avatar-32.png';
 import '../css/index.css'
 
 
 function SubsTanle({ documentUserId, author }) {
 
-  const [subsList, setSubsist] = useState([])
+  const [subsList, setSubsList] = useState([])
   const [success, setSuccess] = useState(false)
 
   const loadSubscribers = async () => {
-    let resultList = await axios.get("http://localhost:8080/api/user/sub/subscribers")
-    setSubsist(resultList.data)
+    await axios.get("http://localhost:8080/api/user/sub/subscribers").then(response=>{
+      setSubsList(response.data)
+    })
   }
 
   const shareDocument = async (userId, documentId) => {
@@ -37,6 +39,7 @@ function SubsTanle({ documentUserId, author }) {
       <MaterialTable
         title="Подписчики"
         columns={[
+          { title: 'Аватар', render:rowData=><img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />},
           { title: 'Ипя пользователя', field: 'username' },
           { title: 'Email', field: 'email' }
         ]}
@@ -57,11 +60,14 @@ function SubsTanle({ documentUserId, author }) {
         localization={{
           body: {
             emptyDataSourceMessage: 'Данных нет'
+
           },
           header:{
-            actions: 'Управление'
+            actions: 'Управление',
+
           },
           toolbar: {
+            nRowsSelected:'{0} выбрано',
             searchTooltip: 'Поиск',
             exportPDFName:'Экспорт PDF',
             searchAriaLabel:'Поиск',

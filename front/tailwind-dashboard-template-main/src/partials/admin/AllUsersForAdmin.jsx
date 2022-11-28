@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import MaterialTable from 'material-table'
+import UserAvatar from '../../images/user-avatar-32.png';
 
 
 function AllUsersForAdmin() {
@@ -30,6 +31,7 @@ function AllUsersForAdmin() {
         <MaterialTable
           title="Пользователи"
           columns={[
+            { title: 'Аватар', render:rowData=><img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />},
             { title: 'Имя пользователя', field: 'username' },
             { title: 'Email', field: 'email' },
 

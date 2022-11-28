@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import MaterialTable from 'material-table'
+import UserAvatar from '../images/user-avatar-32.png';
 
 
 function Subscribers() {
@@ -8,6 +9,8 @@ function Subscribers() {
   const [subsList, setSubsList] = useState([])
   const [showModal, setShowModal] = React.useState(false);
   const [userFromList, setUserFromList] = useState({})
+  const [success, setSuccess] = useState(false)
+  const [subUsername, setSubUsername] = useState('')
 
   const loadSubs = async () => {
     await axios.get("http://localhost:8080/api/user/sub/subscribers").then(response=>{
@@ -17,6 +20,7 @@ function Subscribers() {
 
   const deleteSubs = async (id) => {
     await axios.delete(`http://localhost:8080/api/user/sub/delete/subscriber/${id}`)
+    setSuccess(true)
     loadSubs()
   }
 
@@ -29,12 +33,18 @@ function Subscribers() {
   return (<>
     <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
       <div className="p-5">
+      {success && <div class="bg-red-400 text-center py-4 lg:px-4">
+        <div class="p-2 bg-red-600 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
+          <span class="flex rounded-full bg-red-800 uppercase px-2 py-1 text-xs font-bold mr-3">!</span>
+          <span class="font-semibold mr-2 text-left flex-auto">Вы убрали {subUsername} из подписок</span>
+        </div>
+      </div>}
         <MaterialTable
           title="Подписчики"
           columns={[
-            { title: 'Имя пользователя', field: 'username' },
+            { title: 'Аватар', render:rowData=><img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />},
+            { title: 'Имя пользователя', field: 'username'},
             { title: 'Email', field: 'email' },
-
           ]}
           data={subsList}
           actions={[
@@ -46,7 +56,7 @@ function Subscribers() {
             {
                 icon: 'person_remove',
                 tooltip: 'Отписаться',
-                onClick: (event, rowData) => {deleteSubs(rowData.id)}
+                onClick: (event, rowData) => {setSubUsername(rowData.username); deleteSubs(rowData.id)}
             }
           ]}
           options={{
