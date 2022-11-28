@@ -1,14 +1,14 @@
 package com.ed.edms.service;
 
 
-import com.ed.edms.modal.Person;
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.Person;
+import com.ed.edms.entity.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    List<User> getAll();
+    List<User> getAllWithoutAuth();
 
     Optional<User> getOne(Long id);
 
@@ -16,7 +16,9 @@ public interface UserService {
 
     User deleteOneUser(Long id);
 
-    User updateOneUser(Long id, User user);
+    User updateOneUser(User user);
 
-    User updateUserDetails(Long id, Person person);
+    User updateUserDetails(Person person);
+
+    User getCurrentUser();
 }

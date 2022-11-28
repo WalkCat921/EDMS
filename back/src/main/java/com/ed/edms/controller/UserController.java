@@ -1,13 +1,10 @@
 package com.ed.edms.controller;
 
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.User;
 import com.ed.edms.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,20 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/user/current")
     public ResponseEntity<?> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return new ResponseEntity<>(userDetails, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getCurrentUser(), HttpStatus.OK);
     }
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers() {
-        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllWithoutAuth(), HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
@@ -41,9 +40,9 @@ public class UserController {
         return new ResponseEntity<>(userService.getOne(id), HttpStatus.OK);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody User user) {
-        return new ResponseEntity<>(userService.updateOneUser(id, user), HttpStatus.OK);
+    @PutMapping("/edit")
+    public ResponseEntity<?> updateUserById(@RequestBody User user) {
+        return new ResponseEntity<>(userService.updateOneUser(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -1,11 +1,13 @@
 package com.ed.edms.repository;
 
-import com.ed.edms.modal.ERole;
-import com.ed.edms.modal.Role;
+import com.ed.edms.entity.ERole;
+import com.ed.edms.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Optional<Role> findByName(ERole name);
 }

@@ -1,9 +1,9 @@
 package com.ed.edms.controller;
 
 import com.ed.edms.service.DocumentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,33 +20,33 @@ import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/api/doc")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 public class DocumentController {
 
-    @Autowired
-    private DocumentService documentService;
+    private final DocumentService documentService;
 
-    @GetMapping("/download/{filename:.+}")
-    public ResponseEntity<?> downloadFile(@PathVariable String filename) throws MalformedURLException {
-        return ResponseEntity.ok(documentService.downloadDocument(filename));
+    public DocumentController(DocumentService documentService) {
+        this.documentService = documentService;
     }
 
-    @PutMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseEntity<>(documentService.uploadDocument(file), HttpStatus.OK);
+    @GetMapping("/download/{author}/{filename:.+}")
+    public ResponseEntity<?> downloadFile(@PathVariable String filename, @PathVariable String author) throws MalformedURLException {
+        return ResponseEntity.ok(documentService.downloadDocument(filename, author));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addDocumentToUser(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(documentService.addDocument(file), HttpStatus.OK);
+    public ResponseEntity<?> addDocumentToUser(@RequestParam("file") MultipartFile file,
+                                               @RequestParam("fileName") String fileName) throws IOException {
+        return new ResponseEntity<>(documentService.addDocument(file, fileName), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteDocumentFromUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteDocumentFromUser(@PathVariable Long id) throws IOException {
         return new ResponseEntity<>(documentService.deleteOneDocument(id), HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/mydocs")
     public ResponseEntity<?> getAllUserDocuments() {
         return new ResponseEntity<>(documentService.getAllUserDocuments(), HttpStatus.OK);
     }
@@ -57,6 +57,7 @@ public class DocumentController {
     }
 
     @GetMapping("/all/docs")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllDocuments() {
         return new ResponseEntity<>(documentService.getAllDocuments(), HttpStatus.OK);
     }

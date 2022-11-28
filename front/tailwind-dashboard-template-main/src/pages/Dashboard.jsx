@@ -2,63 +2,61 @@ import React, { useEffect, useState } from 'react';
 import { Router, Routes } from 'react-router-dom';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
-import { Navigate } from 'react-router-dom';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
-import FilterButton from '../partials/actions/FilterButton';
-import Datepicker from '../partials/actions/Datepicker';
 import { Route, useLocation } from 'react-router-dom';
 import DashboardCard01 from '../partials/dashboard/DashboardCard01';
-import DashboardCard02 from '../partials/dashboard/DashboardCard02';
-import DashboardCard03 from '../partials/dashboard/DashboardCard03';
-import DashboardCard04 from '../partials/dashboard/DashboardCard04';
-import DashboardCard05 from '../partials/dashboard/DashboardCard05';
 import DashboardCard06 from '../partials/dashboard/DashboardCard06';
 import DashboardCard07 from '../partials/dashboard/DashboardCard07';
-import DashboardCard08 from '../partials/dashboard/DashboardCard08';
-import DashboardCard09 from '../partials/dashboard/DashboardCard09';
 import DashboardCard10 from '../partials/dashboard/DashboardCard10';
-import DashboardCard11 from '../partials/dashboard/DashboardCard11';
-import DashboardCard12 from '../partials/dashboard/DashboardCard12';
-import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
-import AllUsers from '../partials/admin/AllUsers';
 import DocumentView from '../pages/DocumentView';
 import AddDocument from '../pages/AddDocument';
 import UserForm from '../partials/user/UserForm';
-
+import AllDocumentsTable from '../pages/AllDocumentsTable';
+import AllUsersTable from '../partials/user/AllUsersTable';
+import AllUsersForAdmin from '../partials/admin/AllUsersForAdmin';
+import UserDocuments from '../partials/user/UserDocuments';
+import Subscriptions from './SubscriptionsPage';
+import Subscribers from './SubscriberPage';
+import FAQ from './FAQ';
+import Support from './Suppport';
+import AuthTokenResponse from '../utils/AuthTokenResponse'
+import OnlyAdminRoute from '../utils/OnlyAdminRoute';
+import PageNotFound from './PageNotFound'
+import DashboardCard02 from '../partials/dashboard/DashboardCard02';
 
 
 
 function Dashboard() {
-
-
   const mainDashboardComponents = [<>
     <DashboardCard01 />
     <DashboardCard02 />
-    <DashboardCard03 />
-    <DashboardCard04 />
-    <DashboardCard05 />
     <DashboardCard06 />
     <DashboardCard07 />
-    <DashboardCard08 />
-    <DashboardCard09 />
     <DashboardCard10 />
-    <DashboardCard11 />
-    <DashboardCard12 />
-    <DashboardCard12 />
-    <DashboardCard13 />
   </>]
-  const adminPanelUsers = [<><AllUsers /></>]
+  const allUsersForAdmin = [<><AllUsersForAdmin /></>]
+  const allUsersTable = [<><AllUsersTable /></>]
   const userForm = [<><UserForm /></>]
   const docViewer = [<><DocumentView /></>]
   const addDocument = [<><AddDocument /></>]
-
-
-
+  const allDocuments = [<><AllDocumentsTable /></>]
+  const userDocuments = [<><UserDocuments /></>]
+  const userSubscriptions = [<><Subscriptions /></>]
+  const userSubscribers = [<><Subscribers /></>]
+  const helpFAQ = [<><FAQ /></>]
+  const helpSupport = [<><Support /></>]
   const location = useLocation();
   const [components, setComponents] = useState([]);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (userInfo?.token) {
+      AuthTokenResponse(userInfo.token)
+    }
+  }, [])
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -70,29 +68,31 @@ function Dashboard() {
             <WelcomeBanner />
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-                {/* Filter button */}
-                {/* <FilterButton /> */}
-                {/* Datepicker built with flatpickr */}
-                {/* <Datepicker /> */}
-                {/* Add view button */}
-                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                  <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                  </svg>
-                  <span className="hidden xs:block ml-2">Создать документ</span>
-                </button> */}
               </div>
-
             </div>
-
-            {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
               <Routes>
                 <Route exact path='/' element={mainDashboardComponents} />
-                <Route exact path="/admin/panel/users" element={adminPanelUsers} />
+                <Route exact path="/users" element={allUsersTable} />
                 <Route exact path="/user/profile" element={userForm} />
-                <Route excat path='/menu/document' element={docViewer} />
-                <Route excat path='/menu/document/add' element={addDocument} />
+                <Route excat path='/user/documents' element={userDocuments} />
+                <Route excat path='/users/user/subscriptions' element={userSubscriptions} />
+                <Route excat path='/users/user/subscribers' element={userSubscribers} />
+                <Route excat path='/document/pdf' element={docViewer} />
+                <Route excat path='/document/pdf/add' element={addDocument} />
+                <Route excat path='/admin/doc' element={
+                  <OnlyAdminRoute>
+                    {allDocuments}
+                  </OnlyAdminRoute>
+                } />
+                <Route excat path='/admin/allUsr' element={
+                  <OnlyAdminRoute>
+                    {allUsersForAdmin}
+                  </OnlyAdminRoute>
+                } />
+                <Route excat path='/help/faq' element={helpFAQ} />
+                <Route excat path='/help/support' element={helpSupport} />
+                <Route excat path='/*' element={<><div className='col-span-12'><PageNotFound/></div></>}/>
               </Routes>
             </div>
           </div>

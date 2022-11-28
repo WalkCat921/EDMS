@@ -1,6 +1,6 @@
 package com.ed.edms.repository;
 
-import com.ed.edms.modal.Address;
+import com.ed.edms.entity.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,0 +1,97 @@
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import MaterialTable from 'material-table'
+import ViewDownloadDocument from '../../pages/ViewDownloadDocument';
+import '../../css/index.css'
+import SubsTable from '../SubsTable';
+
+
+function UserDocuments() {
+
+  const [documentList, setDocumentList] = useState([])
+
+  const loadDocuments = async () => {
+    await axios.get("http://localhost:8080/api/doc/mydocs").then(response=>{
+      setDocumentList(response.data)
+    })
+  }
+
+  useEffect(() => {
+    loadDocuments();
+  }, []);
+
+  const deleteDocument = async (id) => {
+    axios.delete(`http://localhost:8080/api/doc/delete/${id}`)
+    loadDocuments();
+  }
+
+  return (<>
+    <div className="flex flex-col col-span-full xl:col-span-12 bg-white shadow-lg rounded-sm border border-slate-200">
+      <MaterialTable
+      title="Мои документы"
+      columns={[
+        { title: 'Название', field: 'name' },
+        { title: 'Автор', field:'author'},
+        { title: 'Тип', field: 'type' },
+        { title: 'Размер (KB)', field:'size'},
+        { title: 'Дата загрузки', field:'creationDate', type: 'datetime' }
+      ]}
+      data={documentList}
+      actions={[
+        rowData => (JSON.parse(localStorage.getItem('userInfo')).username===rowData.author&&{
+          icon:'delete',
+          tooltip:'Удалить',
+          onClick:(event, rowData)=>deleteDocument(rowData.id)
+        })
+      ]}
+      options={{
+        exportButton: true
+      }}
+      detailPanel={[
+        {
+          tooltip: 'Просмотреть',
+          render: rowData => {
+            const author = rowData.author;
+            const fileName = rowData.name;
+            return(<ViewDownloadDocument author={author} fileName={fileName}/>)
+          },
+        },
+        {
+          icon: 'share',
+          tooltip: 'Поделится',
+          render: rowData => {
+            return(<SubsTable author={rowData.author} documentUserId={rowData.id}/>)
+          },
+        },
+      ]}
+      localization={{
+        body: {
+          emptyDataSourceMessage: 'Данных нет'
+        },
+        header:{
+          actions: 'Управление'
+        },
+        toolbar: {
+          searchTooltip: 'Поиск',
+          exportPDFName:'Экспорт PDF',
+          searchAriaLabel:'Поиск',
+          searchPlaceholder:'Поиск...',
+          exportCSVName:'Экспорт CSV',
+          exportTitle: 'Экспорт'
+        },
+        pagination: {
+          labelRowsSelect: 'записей',
+          labelDisplayedRows: ' {from}-{to} записей {count}',
+          firstTooltip: 'Начало',
+          previousTooltip: 'Назад',
+          nextTooltip: 'Далее',
+          lastTooltip: 'В конце'
+        }
+      }}
+    />
+      </div>
+  </>
+  )
+}
+
+export default UserDocuments;

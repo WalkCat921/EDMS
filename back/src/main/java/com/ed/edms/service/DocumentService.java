@@ -1,6 +1,8 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.Document;
+import com.ed.edms.entity.Document;
+import com.ed.edms.entity.User;
+import com.ed.edms.pojo.MessageResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,22 +11,16 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
 
-// TODO statistics
-// TODO documentService (add, delete) to user
 // TODO errorHandling
-// TODO pre-auth
-// TODO documentSharing
 
 public interface DocumentService {
-    Resource downloadDocument(String filename) throws MalformedURLException;
+    Resource downloadDocument(String filename, String author) throws MalformedURLException;
 
-    String uploadDocument(MultipartFile file) throws IOException;
+    User addDocument(MultipartFile file, String fileName) throws IOException;
 
-    Document addDocument(MultipartFile file);
+    MessageResponse deleteOneDocument(Long id) throws IOException;
 
-    Document deleteOneDocument(Long id);
-
-    Document sendOneDocument(Long userId, Long documentId);
+    User sendOneDocument(Long userId, Long documentId);
 
     Set<Document> getAllUserDocuments();
 

@@ -1,10 +1,10 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.Document;
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.Document;
+import com.ed.edms.entity.User;
+import com.ed.edms.pojo.MessageResponse;
 import com.ed.edms.repository.DocumentRepository;
 import com.ed.edms.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -16,88 +16,101 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
     private static final String fileDirectory = System.getProperty("user.dir") + "/documents/";
     private final Path root = Paths.get(fileDirectory);
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
     CurrentUserInfoService currentUserInfoService = new CurrentUserInfoService();
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    DocumentRepository documentRepository;
-
-    @Override
-    public Resource downloadDocument(String filename) throws MalformedURLException {
-        return new UrlResource(root.resolve(filename).toUri());
+    public DocumentServiceImpl(UserRepository userRepository, DocumentRepository documentRepository) {
+        this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
     }
 
     @Override
-    public String uploadDocument(MultipartFile file) throws IOException {
+    public Resource downloadDocument(String filename, String author) throws MalformedURLException {
+        return new UrlResource(root.resolve(author).resolve(filename).toUri());
+    }
+
+    private void uploadDocument(MultipartFile file, String fileName) throws IOException {
         Files.createDirectories(Paths.get(fileDirectory +
                 currentUserInfoService.getCurrentUsername()));
         Path filePath = Paths.get(fileDirectory +
-                currentUserInfoService.getCurrentUsername(), file.getOriginalFilename());
+                currentUserInfoService.getCurrentUsername(), fileName);
         Files.write(filePath, file.getBytes());
-        try (Stream<Path> files = Files.list(Paths.get(fileDirectory +
-                currentUserInfoService.getCurrentUsername()))) {
-            long count = files.count();
-            System.out.println(count);
-        }
-        return "File uploaded " + file.getOriginalFilename();
+//        return "File uploaded " + file.getOriginalFilename();
     }
 
     @Override
-    public Document addDocument(MultipartFile file) {
+    public User addDocument(MultipartFile file, String fileName) throws IOException {
         Document document = new Document();
-        document.setName(file.getName());
+        document.setAuthor(currentUserInfoService.getCurrentUsername());
+        document.setName(fileName);
         document.setType(file.getContentType());
         document.setSize(file.getSize());
         document.setCreationDate(LocalDateTime.now());
-        document.setFullFilePath(file.getOriginalFilename());
-//        Optional<User> user =
-//                userRepository.findByUsername(currentUserInfoService.getCurrentUsername());
-//        user.get().getDocuments().add(document);
-//        userRepository.save(user.get());
-        documentRepository.save(document);
-        return document;
+        uploadDocument(file, fileName);
+        User user = userRepository
+                .findByUsername(currentUserInfoService.getCurrentUsername())
+                .get();
+        if (user.getDocuments() != null) {
+            user.getDocuments().add(document);
+        } else {
+            Set<Document> documents = new HashSet<>();
+            documents.add(document);
+            user.setDocuments(documents);
+        }
+        userRepository.save(user);
+//        documentRepository.save(document);
+        return user;
     }
 
     @Override
-    public Document deleteOneDocument(Long id) {
+    public MessageResponse deleteOneDocument(Long id) throws IOException {
         Optional<Document> document = documentRepository.findById(id);
-        if (document.isPresent()) {
-            documentRepository.deleteById(id);
-            return document.get();
+        User author = userRepository.findByUsername(document.get().getAuthor()).get();
+        User currentUser = userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get();
+        if (currentUser.getUsername().equals(author.getUsername())
+                || currentUser.getRoles().contains("ROLE_ADMIN")) {
+            Set <User> users = document.get().getUsers();
+            ArrayList<String> userNames = new ArrayList<>();
+            users.forEach(user -> userNames.add(user.getUsername()));
+            userNames.forEach(userName -> {
+                User user = userRepository.findByUsername(userName).get();
+                user.getDocuments().remove(document.get());
+                userRepository.save(user);
+            });
+            Files.delete(Path.of(Paths.get(fileDirectory +
+                    author.getUsername()) + "\\" + document.get().getName()));
+            return new MessageResponse("Документ удален");
         } else {
-            return null;
+            return new MessageResponse("Нет доступа");
         }
     }
 
     @Override
-    public Document sendOneDocument(Long userId, Long documentId) {
+    public User sendOneDocument(Long userId, Long documentId) {
         Document document = documentRepository.findById(documentId).get();
-        document.getUsers()
-                .add(userRepository.
-                        findByUsername(currentUserInfoService
-                                .getCurrentUsername()).get());
-        return documentRepository.save(document);
-
-//        Optional<User> user = userRepository.findById(id);
-//        if (user.isPresent()) {
-//            currentUserInfoService.getCurrentUsername();
-//        }
+        User user = userRepository.findById(userId).get();
+        Set<Document> documents = user.getDocuments();
+        documents.add(document);
+        user.setDocuments(documents);
+        return userRepository.save(user);
     }
 
     @Override
     public Set<Document> getAllUserDocuments() {
-        return userRepository.findByUsername(currentUserInfoService
-                .getCurrentUsername()).get().getDocuments();
+        return userRepository
+                .findByUsername(currentUserInfoService.getCurrentUsername()).get()
+                .getDocuments();
     }
 
     @Override

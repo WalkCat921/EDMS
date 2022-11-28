@@ -1,26 +1,42 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.Person;
-import com.ed.edms.modal.User;
+import com.ed.edms.config.jwt.JwtUtils;
+import com.ed.edms.entity.Address;
+import com.ed.edms.entity.Person;
+import com.ed.edms.entity.User;
+import com.ed.edms.pojo.JwtResponse;
 import com.ed.edms.repository.PersonRepository;
 import com.ed.edms.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PersonRepository personRepository;
+    private final UserRepository userRepository;
+    private final PersonRepository personRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final CurrentUserInfoService currentUserInfoService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+
+    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+        this.userRepository = userRepository;
+        this.personRepository = personRepository;
+        this.passwordEncoder = passwordEncoder;
+        currentUserInfoService = new CurrentUserInfoService();
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+    }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<User> getAllWithoutAuth() {
+        List<User> users = userRepository.findAll();
+        users.remove(userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get());
+        return users;
     }
 
     @Override
@@ -46,34 +62,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateOneUser(Long id, User userToUpdate) {
-        Optional<User> user = userRepository.findById(id);
+    public User updateOneUser(User userToUpdate) {
+        User user = userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get();
+        if (user.getPerson() == null){
+            user.setPerson(new Person());
+        }
+        if (user.getPerson().getAddress() == null) {
+            user.getPerson().setAddress(new Address());
+            userRepository.save(user);
+        }
+        user = userRepository.findById(user.getId()).get();
+        user.getPerson().setPhoneNumber(userToUpdate.getPerson().getPhoneNumber());
+        user.getPerson().setSecondName(userToUpdate.getPerson().getSecondName());
+        user.getPerson().setFirstName(userToUpdate.getPerson().getFirstName());
+        user.getPerson().getAddress().setFlatNumber(userToUpdate.getPerson().getAddress().getFlatNumber());
+        user.getPerson().getAddress().setHouseNumber(userToUpdate.getPerson().getAddress().getHouseNumber());
+        user.getPerson().getAddress().setStreet(userToUpdate.getPerson().getAddress().getStreet());
+        user.getPerson().getAddress().setCity(userToUpdate.getPerson().getAddress().getCity());
+        user.getPerson().getAddress().setCountry(userToUpdate.getPerson().getAddress().getCountry());
+        userRepository.save(user);
+
+
+        return user;
+    }
+
+    @Override
+    public User updateUserDetails(Person person) {
+        Optional<User> user = userRepository.findByUsername(currentUserInfoService.getCurrentUsername());
         if (user.isPresent()) {
-            user.get().setUsername(userToUpdate.getUsername());
-            user.get().setEmail(userToUpdate.getEmail());
-            user.get().setRoles(userToUpdate.getRoles());
-            user.get().setPassword(userToUpdate.getPassword());
+            if (user.get().getPerson() == null) {
+                user.get().setPerson(person);
+            } else {
+                Person personToUpdate = personRepository.findById(
+                        user.get().getPerson().getId()).get();
+                personToUpdate.setAddress(person.getAddress());
+                personToUpdate.setFirstName(person.getFirstName());
+                personToUpdate.setPhoneNumber(personToUpdate.getPhoneNumber());
+                personToUpdate.setSecondName(person.getSecondName());
+                user.get().setPerson(personToUpdate);
+            }
             return userRepository.save(user.get());
         }
         return null;
     }
 
     @Override
-    public User updateUserDetails(Long id, Person person) {
-        Optional<User> user = userRepository.findById(id);
-        Date date = new Date();
-
-        if (user.isPresent()) {
-            Optional<Person> personTemp =
-                    personRepository.findByPhoneNumber(person.getPhoneNumber());
-            if (personTemp.isPresent()) {
-                user.get().setPerson(personTemp.get());
-                user.get().getPerson().setUser(user.get());
-            } else {
-                user.get().setPerson(person);
-            }
-            return userRepository.save(user.get());
-        }
-        return null;
+    public User getCurrentUser() {
+        return userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get();
     }
 }

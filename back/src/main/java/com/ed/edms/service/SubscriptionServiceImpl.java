@@ -1,8 +1,7 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.User;
 import com.ed.edms.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -10,8 +9,11 @@ import java.util.Set;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final CurrentUserInfoService currentUserInfoService = new CurrentUserInfoService();
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public SubscriptionServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User addSubscription(Long id) {
@@ -21,7 +23,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return userRepository.save(getCurrentUser());
     }
 
-    //TODO handleError
     @Override
     public Set<User> getAllSubscribers() {
         if (getCurrentUser().getSubscribers() != null) {

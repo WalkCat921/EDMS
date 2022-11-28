@@ -1,4 +1,4 @@
-package com.ed.edms.modal;
+package com.ed.edms.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -60,6 +60,7 @@ public class User {
     private Set<User> subscribers = new HashSet<>();
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "user_subscriptions",
             joinColumns = {@JoinColumn(name = "subscriber_id")},

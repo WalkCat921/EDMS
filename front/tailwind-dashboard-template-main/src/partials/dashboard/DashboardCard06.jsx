@@ -1,44 +1,61 @@
-import React from 'react';
-import DoughnutChart from '../../charts/DoughnutChart';
-
-// Import utilities
-import { tailwindConfig } from '../../utils/Utils';
+import React, { useState, useEffect, useRef } from 'react';
+import { Doughnut } from 'react-chartjs-2';
+import {Chart, ArcElement} from 'chart.js'
+Chart.register(ArcElement);
+import axios from 'axios';
 
 function DashboardCard06() {
 
-  const chartData = {
-    labels: ['United States', 'Italy', 'Other'],
+  const [statisticCountries, setStatisticCountries] = useState([])
+  const [count, setCount] = useState([])
+
+  useEffect(() => {
+    loadContries()
+  },[]);
+
+  const loadContries = async() => {
+    await axios.get('http://localhost:8080/api/dashboard/users/countries').then(response=>{
+    setStatisticCountries(Object.keys(response.data))
+    setCount(Object.values(response.data))
+    })
+  }
+
+ const data = {
+    labels: statisticCountries,
     datasets: [
       {
-        label: 'Top Countries',
-        data: [
-          35, 30, 35,
-        ],
+        label: '# of Votes',
+        data: count,
         backgroundColor: [
-          tailwindConfig().theme.colors.indigo[500],
-          tailwindConfig().theme.colors.blue[400],
-          tailwindConfig().theme.colors.indigo[800],
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
         ],
-        hoverBackgroundColor: [
-          tailwindConfig().theme.colors.indigo[600],
-          tailwindConfig().theme.colors.blue[500],
-          tailwindConfig().theme.colors.indigo[900],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
         ],
-        hoverBorderColor: tailwindConfig().theme.colors.white,
+        borderWidth: 1,
       },
     ],
   };
 
-  return (
+
+  return (<>
     <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm border border-slate-200">
       <header className="px-5 py-4 border-b border-slate-100">
-        <h2 className="font-semibold text-slate-800">Top Countries</h2>
+        <h2 className="font-semibold text-slate-800">Топ по странам</h2>
       </header>
-      {/* Chart built with Chart.js 3 */}
-      {/* Change the height attribute to adjust the chart height */}
-      <DoughnutChart data={chartData} width={389} height={260} />
+      <Doughnut data={data} />
     </div>
+    </>
   );
 }
-
 export default DashboardCard06;

@@ -1,6 +1,5 @@
-package com.ed.edms.modal;
+package com.ed.edms.entity;
 
-import com.ed.edms.service.DocumentService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -9,12 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.print.Doc;
 import java.sql.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "personal_data_table")
@@ -24,7 +20,6 @@ public class Person {
     private Long id;
     private String firstName;
     private String secondName;
-    private Date birthDate;
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -62,14 +57,6 @@ public class Person {
         this.secondName = secondName;
     }
 
-    public Date getBirthdate() {
-        return birthDate;
-    }
-
-    public void setBirthdate(Date birthdate) {
-        this.birthDate = birthdate;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -100,7 +87,6 @@ public class Person {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", birthDate=" + birthDate +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address=" + address +
                 ", user=" + user +

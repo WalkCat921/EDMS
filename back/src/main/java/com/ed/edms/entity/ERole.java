@@ -1,4 +1,4 @@
-package com.ed.edms.modal;
+package com.ed.edms.entity;
 
 public enum ERole {
     ROLE_USER,

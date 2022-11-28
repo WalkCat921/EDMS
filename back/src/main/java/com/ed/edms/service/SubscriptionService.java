@@ -1,6 +1,6 @@
 package com.ed.edms.service;
 
-import com.ed.edms.modal.User;
+import com.ed.edms.entity.User;
 
 import java.util.Set;
 
