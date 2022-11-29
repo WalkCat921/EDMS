@@ -64,6 +64,30 @@ function Subscriptions() {
             actionsColumnIndex: -1,
             exportButton: true,
           }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: 'Данных нет'
+            },
+            header:{
+              actions: 'Управление'
+            },
+            toolbar: {
+              searchTooltip: 'Поиск',
+              exportPDFName:'Экспорт PDF',
+              searchAriaLabel:'Поиск',
+              searchPlaceholder:'Поиск...',
+              exportCSVName:'Экспорт CSV',
+              exportTitle: 'Экспорт'
+            },
+            pagination: {
+              labelRowsSelect: 'записей',
+              labelDisplayedRows: ' {from}-{to} записей {count}',
+              firstTooltip: 'Начало',
+              previousTooltip: 'Назад',
+              nextTooltip: 'Далее',
+              lastTooltip: 'В конце'
+            }
+          }}
           
         />
 
