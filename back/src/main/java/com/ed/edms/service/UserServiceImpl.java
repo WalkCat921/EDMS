@@ -4,13 +4,13 @@ import com.ed.edms.config.jwt.JwtUtils;
 import com.ed.edms.entity.Address;
 import com.ed.edms.entity.Person;
 import com.ed.edms.entity.User;
-import com.ed.edms.pojo.JwtResponse;
 import com.ed.edms.repository.PersonRepository;
 import com.ed.edms.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,14 +18,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PersonRepository personRepository;
+    private final DocumentService documentService;
     private final PasswordEncoder passwordEncoder;
     private final CurrentUserInfoService currentUserInfoService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository, DocumentService documentService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.personRepository = personRepository;
+        this.documentService = documentService;
         this.passwordEncoder = passwordEncoder;
         currentUserInfoService = new CurrentUserInfoService();
         this.authenticationManager = authenticationManager;
@@ -56,15 +58,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteOneUser(Long id) {
-        Optional<User> user = userRepository.findById(id);
+            User user = userRepository.findById(id).get();
+        if (user.getDocuments() != null) {
+            user.getDocuments().forEach(
+                    document -> {
+                        try {
+                            if (document.getAuthor().equals(user.getUsername())) {
+                                documentService.deleteOneDocument(document.getId());
+                            } else {
+                                user.getDocuments().remove(document);
+                                userRepository.save(user);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+            );
+        }
         userRepository.deleteById(id);
-        return user.get();
+        return user;
     }
 
     @Override
     public User updateOneUser(User userToUpdate) {
         User user = userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get();
-        if (user.getPerson() == null){
+        if (user.getPerson() == null) {
             user.setPerson(new Person());
         }
         if (user.getPerson().getAddress() == null) {

@@ -1,6 +1,8 @@
 package com.ed.edms.service;
 
 import com.ed.edms.entity.Document;
+import com.ed.edms.entity.ERole;
+import com.ed.edms.entity.Role;
 import com.ed.edms.entity.User;
 import com.ed.edms.pojo.MessageResponse;
 import com.ed.edms.repository.DocumentRepository;
@@ -21,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -78,20 +81,31 @@ public class DocumentServiceImpl implements DocumentService {
         Optional<Document> document = documentRepository.findById(id);
         User author = userRepository.findByUsername(document.get().getAuthor()).get();
         User currentUser = userRepository.findByUsername(currentUserInfoService.getCurrentUsername()).get();
+        AtomicReference<Boolean> isAdmin = new AtomicReference<>(false);
+        currentUser.getRoles().stream()
+                .forEach(role -> {
+                    if (role.getName().equals(ERole.ROLE_ADMIN)){
+                        isAdmin.set(true);
+                    }
+                });
         if (currentUser.getUsername().equals(author.getUsername())
-                || currentUser.getRoles().contains("ROLE_ADMIN")) {
-            Set <User> users = document.get().getUsers();
+                || isAdmin.get()) {
+            Set<User> users = document.get().getUsers();
+
             ArrayList<String> userNames = new ArrayList<>();
             users.forEach(user -> userNames.add(user.getUsername()));
             userNames.forEach(userName -> {
                 User user = userRepository.findByUsername(userName).get();
                 user.getDocuments().remove(document.get());
+                documentRepository.delete(document.get());
                 userRepository.save(user);
             });
             Files.delete(Path.of(Paths.get(fileDirectory +
                     author.getUsername()) + "\\" + document.get().getName()));
             return new MessageResponse("Документ удален");
         } else {
+            System.out.println(currentUser.getRoles().contains(new Role(ERole.ROLE_ADMIN)));
+            System.out.println(currentUser.getRoles());
             return new MessageResponse("Нет доступа");
         }
     }
