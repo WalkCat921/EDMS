@@ -72,7 +72,8 @@ function Dashboard() {
             </div>
             <div className="grid grid-cols-12 gap-6">
               <Routes>
-                <Route exact path='/' element={
+                <Route exact path='/'/>
+                <Route exact path='/admin/dashboard' element={
                   <OnlyAdminRoute>
                     {mainDashboardComponents}
                   </OnlyAdminRoute>
