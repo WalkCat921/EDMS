@@ -44,19 +44,18 @@ export default function UserForm() {
     const onSubmit = () => {
         initUserData()
         sendUser();
-        console.log(userRequest)
     }
 
     const { values, errors, isSubmitting, handleChange, handleSubmit } = useFormik({
         initialValues: {
-            firstName: person.firstName,
-            secondName: person.secondName,
-            phoneNumber: person.phoneNumber,
-            city: address.city,
-            country: address.country,
-            flatNumber: address.flatNumber,
-            houseNumber: address.houseNumber,
-            street: address.street,
+            firstName: person?.firstName,
+            secondName: person?.secondName,
+            phoneNumber: person?.phoneNumber,
+            city: address?.city,
+            country: address?.country,
+            flatNumber: address?.flatNumber,
+            houseNumber: address?.houseNumber,
+            street: address?.street,
         },
         enableReinitialize: true,
         validationSchema: initialSchema,
@@ -66,6 +65,7 @@ export default function UserForm() {
 
     const sendUser = () => {
         axios.put(`http://localhost:8080/api/users/edit/`, userRequest).then(response => {
+            getUser();
         })
     }
 

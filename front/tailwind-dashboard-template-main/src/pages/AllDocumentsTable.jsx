@@ -20,8 +20,9 @@ function AllDocumentsTable() {
   }, []);
 
   const deleteDocument = async (id) => {
-    axios.delete(`http://localhost:8080/api/doc/delete/${id}`)
-    loadDocuments()
+    axios.delete(`http://localhost:8080/api/doc/delete/${id}`).then(response=>{
+      loadDocuments();
+    })
   }
 
 
@@ -41,7 +42,7 @@ function AllDocumentsTable() {
         rowData => ({
           icon: 'delete',
           tooltip: 'Удалить',
-          onClick: (event, rowData) => deleteDocument(rowData.id)
+          onClick: (event, rowData) => {deleteDocument(rowData.id)}
         })
       ]}
       options={{

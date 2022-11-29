@@ -86,10 +86,8 @@ public class DashboardServiceImpl implements DashboardService {
         List<User> userList = userRepository.findAll();
         Map<String, Integer> subscribersCount = new TreeMap<>();
         for (User user : userList) {
-            if (user.getSubscribers() != null) {
+            if (user.getSubscribers().size() != 0) {
                 subscribersCount.put(user.getUsername(), user.getSubscribers().size());
-            } else {
-                subscribersCount.put(user.getUsername(), 0);
             }
         }
         return subscribersCount;
